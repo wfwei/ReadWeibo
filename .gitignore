@@ -1,0 +1,4 @@
+*.pyc
+ReadWeibo/static/*
+data/*
+.settings/*

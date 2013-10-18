@@ -1,0 +1,223 @@
+2013-10-18 16:31:12 : root     : INFO : running /media/Ubuntu/wksp/eclipse_wksp/ReadWeibo/crawler/TopicCrawler.py
+2013-10-18 16:31:12 : root     : INFO : Start crawling {type:Account, w_name:WeBless} in {type:category, category_id:1, name:机器学习}
+2013-10-18 16:31:12 : root     : INFO : Start fetching home time line of {type:Account, w_name:WeBless}
+2013-10-18 16:31:12 : root     : INFO : Start crawling HomeTimeline for {type:Account, w_name:WeBless}
+2013-10-18 16:31:14 : root     : INFO : Fetch new status: {type:weibo, w_id:3634790811361818}
+2013-10-18 16:31:14 : root     : INFO : Fetch new status: {type:weibo, w_id:3634790547063708}
+2013-10-18 16:31:14 : root     : INFO : Fetch new status: {type:weibo, w_id:3633747758839243}
+2013-10-18 16:31:14 : root     : INFO : Crawl over HomeTimeline for  {type:Account, w_name:WeBless} Over with 2 new
+2013-10-18 16:31:14 : root     : INFO : There are 0 statues in this category that needs updating comments
+2013-10-18 16:31:14 : root     : INFO : crawl by category one round time: 2.14851999283 seconds
+2013-10-18 16:31:14 : root     : INFO : sleep for 166 minutes
+2013-10-18 16:31:44 : root     : INFO : running /media/Ubuntu/wksp/eclipse_wksp/ReadWeibo/crawler/TopicCrawler.py
+2013-10-18 16:31:44 : root     : INFO : Start crawling {type:Account, w_name:WeBless} in {type:category, category_id:1, name:机器学习}
+2013-10-18 16:31:44 : root     : INFO : Start fetching home time line of {type:Account, w_name:WeBless}
+2013-10-18 16:31:45 : root     : INFO : Start crawling HomeTimeline for {type:Account, w_name:WeBless}
+2013-10-18 16:31:45 : root     : INFO : Fetch new status: {type:weibo, w_id:3634790811361818}
+2013-10-18 16:31:45 : root     : INFO : Fetch new status: {type:weibo, w_id:3634790547063708}
+2013-10-18 16:31:45 : root     : INFO : Crawl over HomeTimeline for  {type:Account, w_name:WeBless} Over with 1 new
+2013-10-18 16:31:46 : root     : INFO : There are 0 statues in this category that needs updating comments
+2013-10-18 16:31:46 : root     : INFO : crawl by category one round time: 1.01853489876 seconds
+2013-10-18 16:31:46 : root     : INFO : sleep for 166 minutes
+2013-10-18 16:32:00 : root     : INFO : running /media/Ubuntu/wksp/eclipse_wksp/ReadWeibo/crawler/UserFetcher.py
+2013-10-18 16:32:02 : root     : INFO : new friend:{type:Account, w_name:ansj}
+2013-10-18 16:32:02 : root     : INFO : new friend:{type:Account, w_name:崔心心xin}
+2013-10-18 16:32:02 : root     : INFO : new friend:{type:Account, w_name:ibillxia}
+2013-10-18 16:32:02 : root     : INFO : new friend:{type:Account, w_name:HugoBarra}
+2013-10-18 16:32:02 : root     : INFO : new friend:{type:Account, w_name:阿里小微}
+2013-10-18 16:32:02 : root     : INFO : new friend:{type:Account, w_name:NJ如念}
+2013-10-18 16:32:02 : root     : INFO : new friend:{type:Account, w_name:黄继新}
+2013-10-18 16:32:02 : root     : INFO : new friend:{type:Account, w_name:骆逸}
+2013-10-18 16:32:02 : root     : INFO : new friend:{type:Account, w_name:王小川}
+2013-10-18 16:32:02 : root     : INFO : new friend:{type:Account, w_name:张磊MSRA}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:路遥_机器学习}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:阿里段娘}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:豪文-taobao}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:淘叔度}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:夏粉_百度}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:TreapDB}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:张开旭}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:热电影}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:美剧资讯}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:美剧狂人}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:陈利人}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:淘宝玄侯}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:Hadoop中国}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:LeftNotEasy}
+2013-10-18 16:32:03 : root     : INFO : new friend:{type:Account, w_name:加措活佛-慈爱基金}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:敲代码的张洋}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:耿旺_CASIA}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:WhisperXD}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:THU-ZJ}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:heavenfireray}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:钱钤也是个好青年}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:林倞}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:asker2}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:刘洋THU}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:朱佳俊-}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:杨逍Venus}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:王兴星_}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:HCocoa}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:互动出版网china-pub}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:淘宝指数}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:Hulu_Beijing}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:邱锡鹏}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:rickjin}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:阿里_菲青}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:小米Amphi}
+2013-10-18 16:32:04 : root     : INFO : new friend:{type:Account, w_name:邓亚峰-open}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:作家崔成浩}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:袁全V}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:胡云华}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:媛琼_}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:沈醉2011}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:周枫zf}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:36氪Plus}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:王小川_Matlab}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:马少平THU}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:王俊峰V5}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:Can1974}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:仇光_淘九吾}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:BatmanFly}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:新IT民工}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:ITNLP}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:李代沫Demon}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:孕峰nature}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:clickstone}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:数学文化}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:玄了个澄的}
+2013-10-18 16:32:05 : root     : INFO : new friend:{type:Account, w_name:JerryLead}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:chaoslawful}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:陆尛芝麻開花節節高處不胜寒}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:刘不吃草也能跑}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:俊俊巴}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:东海的月}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:吴晓凡BD5HLI}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:KissDev}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:威威}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:徐盈辉_仁基}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:vinW}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:还是地雷}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:scipedia}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:刘思喆}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:数据分析}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:张磊IDMer}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:杨滔_数据科学}
+2013-10-18 16:32:06 : root     : INFO : new friend:{type:Account, w_name:360校园活动}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:爱竞赛网}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:百度招聘}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:billgates}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:子柳}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:张帆NLP}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:怀亭}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:算文解字}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:北冥乘海生}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:roba}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:刁瑞_Dora}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:whatasha}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:互联网产品-oldlee}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:沈抖}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:李志飞-出门问问}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:西里村}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:蜀江南}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:MachineLearning-ZJU}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:舟亦淪}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:蒋涛CSDN}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:TimYang}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:玉心sober}
+2013-10-18 16:32:07 : root     : INFO : new friend:{type:Account, w_name:天弘基金}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:章泽天}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:LookPre}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:戴文渊}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:陈雨强_Kent}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:Bill_Chenbin}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:Numb3r3}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:郭宽Oct}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:_Fly梦_}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:Chen_1st}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:cnzfm}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:王海峰_百度}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:邓侃}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:淘宝褚霸}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:百度技术沙龙}
+2013-10-18 16:32:08 : root     : INFO : new friend:{type:Account, w_name:阿里巴巴集团招聘}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:林仕鼎}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:500强校园招聘}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:校园招聘信息}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:黑客马拉松}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:github精选}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:帝都码农}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:Fleurxq}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:潘石屹}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:IT人}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:发掘互联网}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:淘宝开放平台}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:投资界微博}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:森林_王}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:刘健_Justin}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:翁恺BA5AG}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:阿里技术嘉年华}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:vpsee}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:MapReduce}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:InfoQ}
+2013-10-18 16:32:09 : root     : INFO : new friend:{type:Account, w_name:图灵郭志敏}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:杭州GDG}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:SegmentFault}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:罗刹剑客}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:杨柳Larry_NLP}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:Linux_cn}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:阿里巴巴集团校园招聘}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:Elieu}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:ArcVision}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:社会网络与数据挖掘}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:ICT时光}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:王威廉}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:李沐mu}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:cvchina}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:陈晓鸣爱折腾}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:刘知远THU}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:老师木}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:余凯_西二旗民工}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:丕子}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:Rachel____Zhang}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:肉肉De嘉}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:美团网王兴}
+2013-10-18 16:32:10 : root     : INFO : new friend:{type:Account, w_name:Google中国校园招聘}
+2013-10-18 16:32:11 : root     : INFO : new friend:{type:Account, w_name:微软校招官方微博}
+2013-10-18 16:32:11 : root     : INFO : new friend:{type:Account, w_name:bicloud笑西西}
+2013-10-18 16:32:11 : root     : INFO : new friend:{type:Account, w_name:大众点评校园招聘}
+2013-10-18 16:32:11 : root     : INFO : new friend:{type:Account, w_name:caoz}
+2013-10-18 16:32:11 : root     : INFO : new friend:{type:Account, w_name:MoreWindows}
+2013-10-18 16:32:11 : root     : INFO : new friend:{type:Account, w_name:翻滚吧zjz}
+2013-10-18 16:32:11 : root     : INFO : new friend:{type:Account, w_name:全年龄魂斗罗_ZJU}
+2013-10-18 16:32:11 : root     : INFO : new friend:{type:Account, w_name:范凯robbin}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:Java面试}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:JAVA面试题}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:左耳朵耗子}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:湾区评论}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:青叔不是青椒}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:12306NG}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:wywacczy}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:王沛斌Raul}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:愛-_-华}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:深藏功与名__ZJU}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:Eagle冲儿}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:sharecqy}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:梁斌penny}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:方兴东}
+2013-10-18 16:32:12 : root     : INFO : new friend:{type:Account, w_name:落魄书生周筱赟}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:TEDtoChina}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:seazenith_haifeng}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:思想聚焦}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:张腾季}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:胡锡进}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:王斌_ICTIR}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:江申_Johnson}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:李航博士}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:新周刊}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:傅军教授}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:研究者July}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:MySQL}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:Geek老彭}
+2013-10-18 16:32:13 : root     : INFO : new friend:{type:Account, w_name:郑晖_冒号}
+2013-10-18 16:32:13 : root     : INFO : Fetched 200 friends

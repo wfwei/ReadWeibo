@@ -1,0 +1,32 @@
+<ul class="gNow" id="{{weibo.w_id}}">
+    <li>
+        <div class="btn-group" data-toggle="buttons-radio">
+          {% for category in all_categories %}
+          <button id="{{weibo.w_id}}-{{category.category_id}}" 
+          class="btn category {% if weibo.real_category == category.category_id %}active{% endif %}" 
+          title="{{category.aka}}">{{category.name}}</button>
+          {% if category.category_id == 4 %}<br />{% endif %}
+          {% endfor %}
+        </div>
+        <div class="card">
+            <p class="card-title">@{{weibo.owner.w_name}}</p>
+            <p>{{weibo.text}}
+            {% if weibo.retweeted_status.w_id|length > 0 %}
+                // @{{weibo.retweeted_status.owner.w_name}}:{{weibo.retweeted_status.text}}
+            {% endif %}
+            </p>
+
+            {% if weibo.bmiddle_pic %}
+            <img src="{{weibo.bmiddle_pic}}" class="full" />
+            {% endif %}
+            {% if weibo.retweeted_status.bmiddle_pic %}
+            <img src="{{weibo.retweeted_status.bmiddle_pic}}" class="full" />
+            {% endif %}
+            <p>{{ weibo.created_at}}</p>
+        </div>
+        
+    </li>
+ 
+</ul>
+
+

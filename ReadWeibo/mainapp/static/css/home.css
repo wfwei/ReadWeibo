@@ -1,0 +1,10 @@
+@charset "UTF-8";
+#no-category.active {
+background-color:red;
+}
+.category.active {
+background-color:green;
+}
+#category-bar {
+position: fixed;
+}

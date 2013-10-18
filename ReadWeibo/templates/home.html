@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load common_filter %}
+{% load set_var %}
+
+{% block title %}ReadWeibo{% endblock%}
+
+{% block extra_css %}
+<link rel="stylesheet" media="all" charset="utf-8" href="{{STATIC_URL}}css/home.css"/>
+<link rel="stylesheet" media="all" charset="utf-8" href="{{STATIC_URL}}css/google-now-card.css"/>
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:500,400,300" rel="stylesheet" type="text/css">
+{% endblock %}
+		    
+{% block main %}
+
+<div class="span1" id="left-part">
+    <ul class="nav nav-tabs nav-stacked" id="category-bar">
+      {% for category in all_categories %}
+      <li><a href="/category/{{category.category_id}}">{{category.name}}</a></li>
+      {% endfor %}
+    </ul>
+</div>
+
+<div class="span5" id="middle-part">
+    {% for weibo in watch_weibo_left %}
+
+    {% include "weibo-card.html" %}
+
+    {% endfor %}
+</div>
+
+<div class="span5" id="right-part">
+
+    {% for weibo in watch_weibo_right %}
+
+    {% include "weibo-card.html" %}
+
+    {% endfor %}
+  
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/home.js"></script>
+{% endblock %}
