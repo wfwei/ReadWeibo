@@ -35,7 +35,7 @@ def crawl_by_user(w_uid, category_id, min_interval=3600):
 			logging.info('Prepare to crawl %s \'s comments' % weibo)
 			WeiboFetcher.FetchComments(w_id=weibo.w_id)
 		end = time.time()
-		
+
 		sleep_len = min_interval - (end-start)
 		logging.info('crawl by user one round time: %d seconds' % int(end-start))
 		if sleep_len>0:
