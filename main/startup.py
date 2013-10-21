@@ -7,7 +7,15 @@ Created on 2013-10-7
 '''
 
 from ReadWeibo.mainapp.models import Category
-# Add category
+
+# Add NULL category
+category, created = Category.objects.get_or_create(category_id=0)
+if created:
+	category.name = u'未分类'
+	category.keywords = u''
+	category.save()
+
+# Add ML category
 category, created = Category.objects.get_or_create(category_id=1)
 if created:
 	category.name = u'机器学习'
