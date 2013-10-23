@@ -7,6 +7,8 @@ Over all configuration
 Created on Aug 29, 2013
 @author: plex
 '''
+
+# Logging config
 import logging, sys
 
 logging.basicConfig(level=logging.INFO,
@@ -21,6 +23,10 @@ console = logging.StreamHandler()
 console.setLevel(logging.INFO)
 console.setFormatter(formatter)
 logging.getLogger('').addHandler(console)
+
+# Jieba Config
+import jieba
+jieba.load_userdict("jieba.dic")
 
 logging.info("running %s" % ' '.join(sys.argv))
 

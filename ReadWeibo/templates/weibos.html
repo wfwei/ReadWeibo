@@ -12,14 +12,6 @@
 		    
 {% block main %}
 
-<div class="span1" id="left-part">
-    <ul class="nav nav-tabs nav-stacked" id="category-bar">
-      {% for category in all_categories %}
-      <li><a href="/weibo/category/{{category.category_id}}">{{category.name}}</a></li>
-      {% endfor %}
-    </ul>
-</div>
-
 <div class="span5" id="middle-part">
     {% for weibo in watch_weibo_left %}
 

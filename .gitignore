@@ -4,3 +4,5 @@ ReadWeibo/static/*
 data/*
 .settings/*
 tags
+*.swp
+*~

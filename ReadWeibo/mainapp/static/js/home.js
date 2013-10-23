@@ -14,7 +14,7 @@ function set_weibo_category(w_id, category) {
     });
   return false;
 }
-function set_category(u_id, category) {
+function set_user_category(u_id, category) {
     var paras = {'category': category, 'u_id': u_id}
     $.ajax({
         url: '/set_user_category/',

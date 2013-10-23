@@ -36,8 +36,8 @@ class Weibo(models.Model):
 	attitudes_count =  models.IntegerField(default=0, blank=True)
 	retweeted_status = models.ForeignKey("self", related_name='retweet_status', blank=True, null=True)
 	
-	predict_category  =  models.ForeignKey("Category", related_name='weibos_p', blank=True, null=True)
-	real_category  =  models.ForeignKey("Category", related_name='weibos_r', blank=True, null=True)
+	predict_category = models.IntegerField(default=0, blank=True)
+	real_category  =  models.IntegerField(default=0, blank=True)
 	
 	owner = models.ForeignKey(Account, related_name='ownweibo', blank=True, null=True, on_delete=models.SET_NULL) #owner
 	watcher = models.ManyToManyField(Account, related_name='watchweibo', blank=True, null=True) # TODO REMOVE who can see this

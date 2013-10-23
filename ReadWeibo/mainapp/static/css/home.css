@@ -8,3 +8,13 @@ background-color:green;
 #category-bar {
 position: fixed;
 }
+
+.user-category-bar {
+    display:block;
+    position:static;
+}
+
+.weibo-category-bar {
+    display:block;
+    position:static;
+}

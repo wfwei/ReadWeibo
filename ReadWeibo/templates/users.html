@@ -9,30 +9,53 @@
 <link rel="stylesheet" media="all" charset="utf-8" href="{{STATIC_URL}}css/google-now-card.css"/>
 <link href="http://fonts.googleapis.com/css?family=Open+Sans:500,400,300" rel="stylesheet" type="text/css">
 {% endblock %}
-		    
+            
 {% block main %}
 
-<div class="span1" id="left-part">
-    <ul class="nav nav-tabs nav-stacked" id="category-bar">
-      {% for category in all_categories %}
-      <li><a href="/user/category/{{category.category_id}}">{{category.name}}</a></li>
-      {% endfor %}
-    </ul>
-</div>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+           <td>用户名和头像</td>
+           <td>真正分类</td>
+           <td>预测分类</td>
+           <td>用户描述</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in category_users %} 
+        <tr>
+            <td>
+                <img src="{{user.w_profile_image}}" />
+                <span>{{user.w_name}}</span>
+           </td>
+           <td> 
+                <div class="btn-group">
+                    <button class="btn btn-mini btn-primary" data-toggle="dropdown">
+                        {{all_categories|sp_category:user.real_category}}
+                        <span class="caret"></span>
+                    </button>
 
-<div class="span10" id="right-part">
-
-    <table class="">
-    {% for user in category_users %}
-
-
-    {% endfor %}
-    </table>
-
-</div>
+                    <ul class="dropdown-menu">
+                        {% for category in all_categories %}
+                        <li>
+                            <a id="{{user.w_uid}}-{{category.category_id}}"
+                                class="user-category" href="JavaScript:void()">{{category.name}}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </td>
+            <td>
+                <span class="label label-success">{{all_categories|sp_category:user.predict_category}}</span> 
+            </td>
+            <td>{{user.w_description}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}
 
 {% block extra_scripts %}
-	<script type="text/javascript" src="{{STATIC_URL}}js/home.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/home.js"></script>
 {% endblock %}

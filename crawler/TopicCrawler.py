@@ -5,7 +5,7 @@ Created on 2013-10-8
 
 @author: plex
 '''
-from ReadWeibo.mainapp.models import Category
+from ReadWeibo.mainapp.models import Category, Weibo
 from ReadWeibo.account.models import Account
 from crawler import WeiboFetcher
 
@@ -29,7 +29,7 @@ def crawl_by_user(w_uid, category_id, min_interval=3600):
 		logging.info('Start fetching home time line of %s' % user)
 		WeiboFetcher.FetchHomeTimeline(w_uid)
 		# crawl comments of weibo(in this category)
-		weibos = category.weibos_p.filter(created_at__gt=datetime.now()-mcui)
+		weibos = Weibo.objects.filter(predict_category=category_id).filter(created_at__gt=datetime.now()-mcui)
 		logging.info('There are %d statues in this category that needs updating comments' % len(weibos))
 		for weibo in weibos:
 			logging.info('Prepare to crawl %s \'s comments' % weibo)

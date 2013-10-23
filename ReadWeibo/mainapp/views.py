@@ -31,14 +31,15 @@ wclient = weibo.APIClient(app_key=Config.weibo_app_key,
 all_categories = Category.objects.all()
 default_user = Account.objects.get(w_name='WeBless')
 
-def home(request, category_id=0):
-
-    return HttpResponse('Hey, Weclome:)')
-
+def home(request):
+    return show_weibos(request,1)
 
 def show_weibos(request, category_id=0):
-    category = Category.objects.get(category_id=category_id)
-    logging.info('current login user: %s, show %s', (request.user, category))
+    try:
+        category = Category.objects.get(category_id=category_id)
+    except:
+        category = None
+    logging.info('current login user: %s, show %s' % (request.user, category))
 
     if request.user.is_authenticated() and not request.user.is_superuser:
         user = Account.objects.get(w_name=request.user.username)
@@ -49,7 +50,7 @@ def show_weibos(request, category_id=0):
 #         if category_id == 0:
 #             thread.start_new_thread(WeiboFetcher.FetchHomeTimeline,(user.w_uid, ))
     template_var = {}
-    watch_weibo = user.watchweibo.filter(real_category__exact=category).filter(retweeted_status__exact=None)[:20]
+    watch_weibo = user.watchweibo.filter(real_category=category_id).filter(retweeted_status__exact=None)[:20]
     size = len(watch_weibo) / 2;
     template_var['watch_weibo_left'] = watch_weibo[:size]
     template_var['watch_weibo_right'] = watch_weibo[size:]
@@ -58,21 +59,29 @@ def show_weibos(request, category_id=0):
     template_var['all_categories'] = all_categories
     template_var['authorize_url'] = wclient.get_authorize_url()
 
-    return render_to_response("home.html", template_var,
+    return render_to_response("weibos.html", template_var,
                               context_instance=RequestContext(request))
 
 def show_users(request, category_id=0):
+
+    if request.user.is_authenticated() and not request.user.is_superuser:
+        user = Account.objects.get(w_name=request.user.username)
+        logging.info('Current Login user: %s' % user)
+    else:
+        logging.info('Anonymouse user, use default user:%s' % default_user)
+        user = default_user
+
+    try:
+        category = Category.objects.get(category_id=category_id)
+        logging.info('show users in category: %s' % category)
+    except:
+        logging.warn('No category found')
+        return HttpResponse('No category found for id:%s' % category_id)
+
     template_var = {}
-    user = default_user
-    category = Category.objects.get(category_id=category_id)
-
-    logging.info('show user in %s, current login user %s' % (category, user))
-
-    template_var['category_users'] = user.friends.all() & category.accounts_p.all()
-    template_var['other_users'] = user.friends.all()
+    template_var['category'] = category
+    template_var['category_users'] = user.friends.filter(predict_category=category_id)
     template_var['all_categories'] = all_categories
-
-    logging.info(template_var)
 
     return render_to_response("users.html", template_var,
                               context_instance=RequestContext(request))

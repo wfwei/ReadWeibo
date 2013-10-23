@@ -20,6 +20,14 @@ def keyvalue(dict, key):
     return dict[key]
 
 @register.filter
+def sp_category(categories, category_id):
+    ''' return dict keyvalue'''
+    for category in categories:
+        if category.category_id == category_id:
+            return category.name 
+    return 'INVALID'
+
+@register.filter
 def parse_html_tag(value):
     ''' for '<a href="url">text</a>' return ('url', 'text') '''
     return value
