@@ -1,10 +1,10 @@
 @charset "UTF-8";
-#no-category.active {
-background-color:red;
+
+.weibo-img-container {
+    height: 200px;  
+    overflow: hidden; 
 }
-.category.active {
-background-color:green;
-}
+
 #category-bar {
-position: fixed;
+    position:fixed;
 }

@@ -1,24 +1,35 @@
+{% load common_filter %}
+
 <ul class="gNow" id="{{weibo.w_id}}">
     <li>
-        <div class="btn-group" data-toggle="buttons-radio">
-          {% for category in all_categories %}
-          <button id="{{weibo.w_id}}-{{category.category_id}}" 
-          class="btn weibo-category {% if weibo.real_category == category.category_id %}active{% endif %}" 
-          title="{{category.aka}}">{{category.name}}</button>
-          {% if category.category_id == 4 %}<br />{% endif %}
-          {% endfor %}
-        </div>
-        <div class="card">
+         <div class="card">
             <p class="card-title">@{{weibo.owner.w_name}}</p>
             <p>{{weibo.text}}</p>
             {% if weibo.bmiddle_pic %}
-            <img src="{{weibo.bmiddle_pic}}" class="full" />
+            <div class="weibo-img-container" >
+                <img src="{{weibo.bmiddle_pic}}" class="full" />
+            </div>
             {% endif %}
             <p>{{ weibo.created_at}}</p>
+
+            <div class="btn-group">
+                <button id="category-button-{{weibo.w_id}}" class="btn btn-mini btn-primary" data-toggle="dropdown">
+                    {{all_categories|sp_category:weibo.real_category}}
+                    <span class="caret"></span>
+                </button>
+
+                <ul class="dropdown-menu">
+                    {% for category in all_categories %}
+                    <li>
+                        <a id="{{weibo.w_id}}-{{category.category_id}}"
+                            class="weibo-category" href="JavaScript:void()">{{category.name}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <span class="label {% if weibo.real_category == weibo.predict_category %} label-success {% else %} label-warning{% endif %}">{{all_categories|sp_category:weibo.predict_category}}</span> 
         </div>
-        
     </li>
- 
 </ul>
 
 

@@ -31,8 +31,8 @@ class Account(models.Model):
 	w_verified = models.BooleanField(default=False)
 
 	feature = models.TextField(blank=True)
-	predict_category  =  models.ForeignKey("mainapp.Category", related_name='accounts_p', blank=True, null=True)
-	real_category  =  models.ForeignKey("mainapp.Category", related_name='accounts_r', blank=True, null=True)
+	predict_category  =  models.IntegerField(default=0)
+	real_category  =  models.IntegerField(default=0)
 
 	user = models.ForeignKey(auth_models.User, null=True, on_delete=models.CASCADE) #绑定系统用户，可选
 	oauth = models.ForeignKey("UserOauth2", null=True, on_delete=models.CASCADE)

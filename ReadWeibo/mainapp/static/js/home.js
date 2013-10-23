@@ -5,27 +5,29 @@ function set_weibo_category(w_id, category) {
         type: 'put',
         dataType: 'json',
         data: JSON.stringify(paras),
-        success: function (is_success) {
-          if (is_success) {
-          }else{
-              alert('Fail');
-          }
+        success: function (return_val) {
+            if (return_val) {
+                $("#category-button-"+w_id)[0].innerText = return_val;
+            }else{
+                alert('Fail');
+            }
         }
     });
   return false;
 }
-function set_category(u_id, category) {
+function set_user_category(u_id, category) {
     var paras = {'category': category, 'u_id': u_id}
     $.ajax({
         url: '/set_user_category/',
         type: 'put',
         dataType: 'json',
         data: JSON.stringify(paras),
-        success: function (is_success) {
-          if (is_success) {
-          }else{
-              alert('Fail');
-          }
+        success: function (return_val) {
+            if (return_val) {
+                $("#category-button-"+u_id)[0].innerText = return_val;
+            }else{
+                alert('Fail');
+            }
         }
     });
   return false;

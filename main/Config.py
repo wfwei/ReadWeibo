@@ -7,6 +7,8 @@ Over all configuration
 Created on Aug 29, 2013
 @author: plex
 '''
+
+# Logging config
 import logging, sys
 
 logging.basicConfig(level=logging.INFO,
@@ -22,6 +24,10 @@ console.setLevel(logging.INFO)
 console.setFormatter(formatter)
 logging.getLogger('').addHandler(console)
 
+# Jieba Config
+import jieba
+jieba.load_userdict("/etc/jieba/jieba.dic")
+
 logging.info("running %s" % ' '.join(sys.argv))
 
 #weibo app settings
@@ -30,7 +36,7 @@ logging.info("running %s" % ' '.join(sys.argv))
 # weibo_app_secret = u'289ae4ee3da84d8c4c359312dc2ca17d'
 # callback_url = site_url + u'/weibo_callback'
 # callback_rm_url = site_url + u'/weibo_callback_rm'
-site_url = u'http://115.28.165.49/'#u'http://10.110.25.49:8000' #
+site_url = u'http://115.28.165.49'#u'http://10.110.25.49:8000' #
 weibo_app_key = u'3482624382'
 weibo_app_secret = u'af44e0e7c3a7a55760d437cea207dd22'
 callback_url = site_url + u'/weibo_callback'
