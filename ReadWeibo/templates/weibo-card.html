@@ -10,7 +10,7 @@
                 <img src="{{weibo.bmiddle_pic}}" class="full" />
             </div>
             {% endif %}
-            <p>{{ weibo.created_at}}</p>
+            <p>{{ weibo.created_at|time_passed }}</p>
 
             <div class="btn-group">
                 <button id="category-button-{{weibo.w_id}}" class="btn btn-mini btn-primary" data-toggle="dropdown">
