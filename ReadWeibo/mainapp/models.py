@@ -41,7 +41,7 @@ class Weibo(models.Model):
     real_category  =  models.IntegerField(default=0, blank=True)
 
     owner = models.ForeignKey(Account, related_name='ownweibo', blank=True, null=True, on_delete=models.SET_NULL) #owner
-    watcher = models.ManyToManyField(Account, related_name='watchweibo', blank=True, null=True) # TODO REMOVE who can see this
+    watcher = models.ManyToManyField(Account, related_name='watchweibo', blank=True, null=True)
 
     # last update comments
     last_update_comments = models.DateTimeField(default='1000-09-04 19:01:08')
@@ -55,7 +55,6 @@ class Weibo(models.Model):
 
     class Meta:
         ordering = ["-w_id"]
-
 
 class Comment(models.Model):
 

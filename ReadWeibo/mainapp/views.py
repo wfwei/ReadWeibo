@@ -38,9 +38,13 @@ def show_weibos(request, category_id=0):
     try:
         category = Category.objects.get(category_id=category_id)
     except:
+<<<<<<< HEAD
         logging.warn('No category found')
         return HttpResponse('No category found for id:%s' % category_id)
 
+=======
+        category = None
+>>>>>>> origin/master
     logging.info('current login user: %s, show %s' % (request.user, category))
 
     if request.user.is_authenticated() and not request.user.is_superuser:
@@ -52,7 +56,11 @@ def show_weibos(request, category_id=0):
     # if category_id == 0:
     #       thread.start_new_thread(WeiboFetcher.FetchHomeTimeline,(user.w_uid, ))
     template_var = {}
+<<<<<<< HEAD
     watch_weibo = user.watchweibo.filter(predict_category=category_id).filter(retweeted_status__exact=None)[:20]
+=======
+    watch_weibo = user.watchweibo.filter(real_category=category_id).filter(retweeted_status__exact=None)[:20]
+>>>>>>> origin/master
     size = len(watch_weibo) / 2;
     template_var['watch_weibo_left'] = watch_weibo[:size]
     template_var['watch_weibo_right'] = watch_weibo[size:]

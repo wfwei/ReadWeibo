@@ -70,8 +70,8 @@ class UserClassifer():
 
 if __name__ == '__main__':
     user_work = UserClassifer(from_uid=1698863684, category_id=1)
-    # user_work.auto_lable_user()
+    user_work.auto_lable_user()
     user_work.auto_label_weibo()
-    # user_work.learn()
+    user_work.learn()
     pass
 
