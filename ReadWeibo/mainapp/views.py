@@ -34,7 +34,10 @@ default_user = Account.objects.get(w_name='WeBless')
 def home(request):
     return show_weibos(request,1)
 
-def show_weibos(request, category_id=0):
+def show_weibos_predict(request, category_id=0, show_predict=True):
+    return show_weibos(request, category_id, show_predict)
+
+def show_weibos(request, category_id=0, show_predict=False):
     try:
         category = Category.objects.get(category_id=category_id)
     except:
@@ -52,7 +55,11 @@ def show_weibos(request, category_id=0):
     # if category_id == 0:
     #       thread.start_new_thread(WeiboFetcher.FetchHomeTimeline,(user.w_uid, ))
     template_var = {}
-    watch_weibo = user.watchweibo.filter(predict_category=category_id).filter(retweeted_status__exact=None)[:20]
+    if show_predict:
+        watch_weibo = user.watchweibo.filter(predict_category=category_id)[:40] #.filter(retweeted_status__exact=None)[:40]
+    else:
+        watch_weibo = user.watchweibo.filter(real_category=category_id)[:40] #.filter(retweeted_status__exact=None)[:40]
+
     size = len(watch_weibo) / 2;
     template_var['watch_weibo_left'] = watch_weibo[:size]
     template_var['watch_weibo_right'] = watch_weibo[size:]
@@ -61,17 +68,15 @@ def show_weibos(request, category_id=0):
     template_var['all_categories'] = all_categories
     template_var['authorize_url'] = wclient.get_authorize_url()
 
+    logging.info('category weibos count:%d' % len(watch_weibo))
+
     return render_to_response("weibos.html", template_var,
                               context_instance=RequestContext(request))
 
-def show_users(request, category_id=0):
+def show_users_predict(request, category_id=0, show_predict=True):
+    return show_users(request, category_id, show_predict)
 
-    if request.user.is_authenticated() and not request.user.is_superuser:
-        user = Account.objects.get(w_name=request.user.username)
-        logging.info('Current Login user: %s' % user)
-    else:
-        logging.info('Anonymouse user, use default user:%s' % default_user)
-        user = default_user
+def show_users(request, category_id=0, show_predict=False):
 
     try:
         category = Category.objects.get(category_id=category_id)
@@ -80,10 +85,24 @@ def show_users(request, category_id=0):
         logging.warn('No category found')
         return HttpResponse('No category found for id:%s' % category_id)
 
+    logging.info('current login user: %s, show %s' % (request.user, category))
+
+    if request.user.is_authenticated() and not request.user.is_superuser:
+        user = Account.objects.get(w_name=request.user.username)
+        logging.info('Current Login user: %s' % user)
+    else:
+        logging.info('Anonymouse user, use default user:%s' % default_user)
+        user = default_user
+
     template_var = {}
     template_var['category'] = category
-    template_var['category_users'] = user.friends.filter(predict_category=category_id)
+    if show_predict:
+        template_var['category_users'] = user.friends.filter(predict_category=category_id)
+    else:
+        template_var['category_users'] = user.friends.filter(real_category=category_id)
     template_var['all_categories'] = all_categories
+
+    logging.info('category users count:%d' % len(template_var['category_users']))
 
     return render_to_response("users.html", template_var,
                               context_instance=RequestContext(request))

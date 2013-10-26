@@ -10,20 +10,27 @@ from ReadWeibo.mainapp.models import Category
 import logging
 
 logging.info(u'Initializing categories')
+
 # Add NULL category
 category, created = Category.objects.get_or_create(category_id=0)
-if created:
-	category.name = u'未分类'
-	category.keywords = u''
-	category.save()
-	logging.info(u'Create new category:%s' % category)
+category.name = u'未分类'
+category.keywords = u''
+category.save()
+logging.info(u'Create or update category:%s' % category)
+
+# Add 'other' category
+category, created = Category.objects.get_or_create(category_id=1024)
+category.name = u'其他'
+category.keywords = u''
+category.save()
+logging.info(u'Create or update category:%s' % category)
+
 
 # Add ML category
 category, created = Category.objects.get_or_create(category_id=1)
-if created:
-	category.name = u'机器学习'
-	category.keywords = u'数据挖掘 datamining dm 机器学习 machinelearing ml 自然语言处理 natuallanguageprocess nlp 模式识别 patternrecognization 信息检索 informationretrieval 统计学习 statisticsstudy CTR 人脸识别 acerecognization 模型优化 modeloptimization 社交网络 socialnetwork 搜索引擎 searchengine rank 数据分析 dataanlysis 机器翻译 个性化推荐 推荐系统 recommendsystem 大数据 bigdata 计算机视觉 文本挖掘 textmining '
-	category.save()
-	logging.info(u'Create new category:%s' % category)
+category.name = u'机器学习'
+category.keywords = u'数据挖掘 datamining dm 机器学习 machinelearing 自然语言处理 natuallanguageprocess nlp 模式识别 patternrecognization 信息检索 informationretrieval 统计学习 statisticsstudy CTR 人脸识别 acerecognization 模型优化 modeloptimization 社交网络 socialnetwork 搜索引擎 searchengine pagerank 数据分析 dataanlysis 机器翻译 个性化推荐 推荐系统 recommendsystem 大数据 bigdata 计算机视觉 文本挖掘 textmining'
+category.save()
+logging.info(u'Create or update category:%s' % category)
 
 logging.info(u'Initialization done')

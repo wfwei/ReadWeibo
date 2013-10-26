@@ -40,7 +40,9 @@
         <br />
     
     <div class="span1" id="left-part">
+
         <ul class="nav nav-list" id="category-bar">
+
             <li class="nav-header">
                 <i class="icon-user"></i>
                 用户分类
@@ -54,6 +56,24 @@
             </li>
             {% for category in all_categories %}
             <li><a href="/weibo/category/{{category.category_id}}">{{category.name}}</a></li>
+            {% endfor %}
+            
+            <li class="nav-header">===</li>
+            <li class="nav-header">预测</li>
+            <li class="nav-header">===</li>
+            <li class="nav-header">
+                <i class="icon-user"></i>
+                用户分类
+            </li>
+            {% for category in all_categories %}
+            <li><a href="/user/category_predict/{{category.category_id}}">{{category.name}}</a></li>
+            {% endfor %}
+            <li class="nav-header">
+                <i class="icon-book"></i>
+                微博分类
+            </li>
+            {% for category in all_categories %}
+            <li><a href="/weibo/category_predict/{{category.category_id}}">{{category.name}}</a></li>
             {% endfor %}
         </ul>
     </div>

@@ -38,9 +38,9 @@ def time_passed(pre_time, cur_time=datetime.now()):
 
     hours, seconds = divmod(td.seconds, 3600)
     minutes, seconds = divmod(seconds, 60)
-
+    res = ''
     if hours>0:  res = '%2d小时' % hours
     if minutes>0: res += '%2d分' % minutes
-    if seconds>0: res += '%2d秒' % seconds
+    if seconds>=0: res += '%2d秒' % seconds
 
-    return res + '之前'
+    return res + '之前' + str(pre_time)

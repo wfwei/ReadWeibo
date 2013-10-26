@@ -11,11 +11,13 @@ urlpatterns = patterns('',
     #Weibo
     url(r'^weibo$', 'ReadWeibo.mainapp.views.show_weibos', name='weibos'),
     url(r'^weibo/category/(?P<category_id>\d+)$', 'ReadWeibo.mainapp.views.show_weibos', name='weibo_category_view'),
+    url(r'^weibo/category_predict/(?P<category_id>\d+)$', 'ReadWeibo.mainapp.views.show_weibos_predict', name='weibo_category_view'),
     url(r'^set_weibo_category/$', 'ReadWeibo.mainapp.views.set_weibo_category', name='set_weibo_category'),
 
     #User
     url(r'^user$', 'ReadWeibo.mainapp.views.show_users', name='users'),
     url(r'^user/category/(?P<category_id>\d+)$', 'ReadWeibo.mainapp.views.show_users', name='user_category_view'),
+    url(r'^user/category_predict/(?P<category_id>\d+)$', 'ReadWeibo.mainapp.views.show_users_predict', name='user_category_view'),
     url(r'^set_user_category/$', 'ReadWeibo.mainapp.views.set_user_category', name='set_user_category'),
 
     #Auth
