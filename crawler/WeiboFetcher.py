@@ -23,6 +23,8 @@ from time import sleep
 import traceback
 import logging
 
+_request_interval = 1 # secodes
+
 def FetchUserTimeline(w_uid, append=True, max_count=1000, max_interval=100):
     '''
     获取当前用户所发布的微博，需要授权
@@ -69,9 +71,10 @@ def FetchUserTimeline(w_uid, append=True, max_count=1000, max_interval=100):
         else:
             logging.info('Fetched %d statuses' % tot_fetched)
             page_id += 1
+            sleep(_request_interval)
 
     if tot_fetched>0 or over:
-        logging.info('Crawl over UserTimeLine for %s with %d new' % (user, tot_fetched))
+        logging.info('Fetch over UserTimeLine for %s with %d new' % (user, tot_fetched))
         user.last_update_utl = datetime.now()
         user.save()
     else:
@@ -110,13 +113,14 @@ def FetchComments(w_id, max_count=1000):
                 tot_fetched += 1
 
         if tot_fetched>max_count or over:
-            logging.info('Crawl over %s\'s comments with %d new' % (status, tot_fetched))
+            logging.info('Fetch over %s\'s comments with %d new' % (status, tot_fetched))
             break
         else:
             page_id += 1
+            sleep(_request_interval)
 
     if tot_fetched>0:
-        logging.info('Crawl over Comments for  %s Over with %d new' % (status, tot_fetched))
+        logging.info('Fetch over Comments for  %s Over with %d new' % (status, tot_fetched))
         status.last_update_comments = datetime.now()
         status.save()
     else:
@@ -130,7 +134,7 @@ def FetchHomeTimeline(w_uid, max_count=5000):
     else:
         wclient.set_access_token(user.oauth.access_token, user.oauth.expires_in)
 
-    logging.info("Start crawling HomeTimeline for %s" % user)
+    logging.info("Start fetching HomeTimeline for %s" % user)
 
     tot_fetched = 0; page_id = 1; page_size = 200; over=False
     while not over:
@@ -162,10 +166,10 @@ def FetchHomeTimeline(w_uid, max_count=5000):
         else:
             logging.info('Fetched %d statuses' % tot_fetched)
             page_id += 1
-            sleep(0.5)
+            sleep(_request_interval)
 
     if tot_fetched>0:
-        logging.info('Crawl over HomeTimeline for  %s Over with %d new' % (user, tot_fetched))
+        logging.info('Fetch over HomeTimeline for  %s Over with %d new' % (user, tot_fetched))
         user.last_update_htl = datetime.now()
         user.save()
     else:

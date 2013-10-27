@@ -3,13 +3,28 @@
 <ul class="gNow" id="{{weibo.w_id}}">
     <li>
          <div class="card">
-            <p class="card-title">@{{weibo.owner.w_name}}</p>
-            <p>{{weibo.text}}</p>
-            {% if weibo.bmiddle_pic %}
-            <div class="weibo-img-container" >
-                <img src="{{weibo.bmiddle_pic}}" class="full" />
-            </div>
+            <p class="card-title">
+                <a href="/user/weibos/{{weibo.owner.w_uid}}">
+                @{{weibo.owner.w_name}}
+                </a>
+            </p>
+
+            {% if weibo.retweeted_status %}
+            <p>{{weibo.text}}//@{{weibo.retweeted_status.owner.w_name}}:{{weibo.retweeted_status.text}}</p>
+                {% if weibo.retweeted_status.bmiddle_pic %}
+                <div class="weibo-img-container" >
+                    <img src="{{weibo.retweeted_status.bmiddle_pic}}" class="full" />
+                </div>
+                {% endif %}
+            {% else %}
+                <p>{{weibo.text}}</p>
             {% endif %}
+            {% if weibo.bmiddle_pic %}
+                <div class="weibo-img-container" >
+                    <img src="{{weibo.bmiddle_pic}}" class="full" />
+                </div>
+            {% endif %}
+
             <p>{{ weibo.created_at|time_passed }}</p>
 
             <div class="btn-group">

@@ -57,8 +57,10 @@ def show_weibos(request, category_id=0, show_predict=False):
     template_var = {}
     if show_predict:
         watch_weibo = user.watchweibo.filter(predict_category=category_id)[:40] #.filter(retweeted_status__exact=None)[:40]
+        messages = 'Predict View: '
     else:
         watch_weibo = user.watchweibo.filter(real_category=category_id)[:40] #.filter(retweeted_status__exact=None)[:40]
+        messages = 'Non-Predict View: '
 
     size = len(watch_weibo) / 2;
     template_var['watch_weibo_left'] = watch_weibo[:size]
@@ -67,6 +69,9 @@ def show_weibos(request, category_id=0, show_predict=False):
     template_var['category_id'] = category_id
     template_var['all_categories'] = all_categories
     template_var['authorize_url'] = wclient.get_authorize_url()
+
+    template_var['messages'] = messages + '%d weibo in User:%s\' home timeline' % \
+            (len(watch_weibo), user.w_name)
 
     logging.info('category weibos count:%d' % len(watch_weibo))
 
@@ -96,16 +101,49 @@ def show_users(request, category_id=0, show_predict=False):
 
     template_var = {}
     template_var['category'] = category
+
     if show_predict:
-        template_var['category_users'] = user.friends.filter(predict_category=category_id)
+        category_users = user.friends.filter(predict_category=category_id)
+        messages = 'Predict view:'
     else:
-        template_var['category_users'] = user.friends.filter(real_category=category_id)
+        category_users = user.friends.filter(real_category=category_id)
+        messages = 'Non-Predict view:'
+    template_var['category_users'] = category_users
     template_var['all_categories'] = all_categories
+
+    template_var['messages'] = messages + '%d users in category:%s' % \
+            (len(category_users), category.name)
 
     logging.info('category users count:%d' % len(template_var['category_users']))
 
     return render_to_response("users.html", template_var,
                               context_instance=RequestContext(request))
+
+def show_user_weibos(request, w_uid=0, show_predict=False):
+    logging.info('w_uid:%s, type:%s' % (w_uid, type(w_uid)))
+    try:
+        user = Account.objects.get(w_uid=w_uid)
+    except:
+        logging.warn('No user found for id:%s' % w_uid)
+        return HttpResponse('No user found for id:%s' % w_uid)
+
+    logging.info('current login user: %s, show %s\' weibos' % (request.user, user))
+
+    template_var = {}
+    watch_weibo = user.ownweibo.all()[:40] #.filter(retweeted_status__exact=None)[:40]
+    size = len(watch_weibo) / 2;
+    template_var['watch_weibo_left'] = watch_weibo[:size]
+    template_var['watch_weibo_right'] = watch_weibo[size:]
+    template_var['all_categories'] = all_categories
+    template_var['messages'] = 'show %s\'s weibos %d/%d' % \
+            (user.w_name, len(watch_weibo), user.ownweibo.count())
+
+    logging.info('%s weibos count:%d' % (user, len(watch_weibo)))
+
+    return render_to_response("weibos.html", template_var,
+                              context_instance=RequestContext(request))
+
+
 
 def set_weibo_category(request):
     if not request.is_ajax():
@@ -117,6 +155,14 @@ def set_weibo_category(request):
         category = Category.objects.get(category_id=category_id)
         wb.real_category = category_id
         wb.save()
+
+        if wb.retweeted_status:
+            original_status = wb.retweeted_status
+            original_status.real_category = category_id
+            original_status.save()
+            for retweet in original_status.retweet_status.all():
+                retweet.real_category = category_id
+                retweet.save()
     except:
         logging.warn('post_data error:%s' % post_data)
         return HttpResponse(simplejson.dumps(False), _mimetype)

@@ -20,6 +20,9 @@ urlpatterns = patterns('',
     url(r'^user/category_predict/(?P<category_id>\d+)$', 'ReadWeibo.mainapp.views.show_users_predict', name='user_category_view'),
     url(r'^set_user_category/$', 'ReadWeibo.mainapp.views.set_user_category', name='set_user_category'),
 
+    #User's weibos
+    url(r'^user/weibos/(?P<w_uid>\d+)$', 'ReadWeibo.mainapp.views.show_user_weibos', name='user_weibo_view'),
+
     #Auth
     url(r'^weibo_callback$', 'ReadWeibo.account.views.weibo_callback', name='weibo_callback'),
     # Admin

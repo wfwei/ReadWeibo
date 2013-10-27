@@ -77,7 +77,13 @@
             {% endfor %}
         </ul>
     </div>
-    <div id="right-part">
+    <div id="right-part" class="span11">
+        {%if messages %}
+        <div class="alert alert-info">
+            <a class="close" data-dismiss="alert">×</a>
+            {{messages}}
+        </div> 
+        {% endif %}
         {% block main %}
         {% endblock %}
     </div>

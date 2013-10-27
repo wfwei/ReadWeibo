@@ -46,9 +46,9 @@ class Weibo(models.Model):
     # last update comments
     last_update_comments = models.DateTimeField(default='1000-09-04 19:01:08')
 
-    def need_update_comments(self):
+    def need_update_comments(self, update_interval=1000):
         # 微博刚发布或更新不久的，不急于更新评论
-        return (datetime.now()-self.last_update_comments).seconds > 10000 # more than 2 hours
+        return (datetime.now()-self.last_update_comments).seconds > update_interval
 
     def __unicode__(self):
         return u'{type:weibo, w_id:%s}' % self.w_id
