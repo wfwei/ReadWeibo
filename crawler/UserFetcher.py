@@ -8,10 +8,14 @@ Created on 2013-10-7
 from main import Config
 from djangodb.AccountDao import AccountDao
 from libweibo import weibo
-wclient = weibo.APIClient(app_key=Config.weibo_app_key,
-                    app_secret = Config.weibo_app_secret,
-                    redirect_uri = Config.callback_url)
-wclient.set_access_token(Config.default_access_token, Config.default_access_token_expires_in)
+
+WEIBO_API = Config.WEIBO_API_GGZZ
+wclient = weibo.APIClient(app_key = WEIBO_API['app_key'],
+                       app_secret = WEIBO_API['app_secret'],
+                     redirect_uri = WEIBO_API['callback_url'])
+wclient.set_access_token(
+        WEIBO_API['default_access_token'],
+        WEIBO_API['default_token_expire'])
 
 from ReadWeibo.account.models import Account
 from datetime import datetime
@@ -24,14 +28,14 @@ def FetchFriends(w_uid, max_count=500):
 	'''
 	抓取当前用户的friends列表，需要用户授权，默认抓取最新的500的好友
 	'''
-	
+
 	user = Account.objects.get(w_uid=w_uid)
-	
+
 	if not user.need_update_fri():
-		logging.info('No need to update friend list for %s (last update time: %s)' 
+		logging.info('No need to update friend list for %s (last update time: %s)'
 					% (user, user.last_update_fri))
 		return
-	
+
 	if user.oauth.is_expired():
 		logging.warn('OAuth(%s) Expired for %s' % (user.oauth, user))
 		return
@@ -63,13 +67,13 @@ def FetchFriends(w_uid, max_count=500):
 				logging.error(traceback.format_exc())
 		user.save()
 		cursor = int(friends['next_cursor'])
-		
+
 		logging.info('Fetched %d friends' % cursor)
 		if cursor>max_count or cursor==0:
 			break
 		else:
 			sleep(0.5)
-	
+
 	user.last_update_fri = datetime.now()
 	user.save()
 
@@ -77,14 +81,14 @@ def FetchFollowers(w_uid, max_count=1000):
 	'''
 	抓取当前用户的friends列表，需要用户授权，默认抓取最新的500的好友 TODO 貌似只能爬取一部分？？
 	'''
-	
+
 	user = Account.objects.get(w_uid=w_uid)
-	
+
 	if not user.need_update_fol():
-		logging.info('No need to update follower list for %s (last update time: %s)' 
+		logging.info('No need to update follower list for %s (last update time: %s)'
 					% (user, user.last_update_fol))
 		return
-	
+
 	if user.oauth.is_expired():
 		logging.warn('OAuth(%s) Expired for %s' % (user.oauth, user))
 		return
@@ -122,7 +126,7 @@ def FetchFollowers(w_uid, max_count=1000):
 			break;
 		else:
 			sleep(0.5)
-		
+
 	user.last_update_fol = datetime.now()
 	user.save()
 

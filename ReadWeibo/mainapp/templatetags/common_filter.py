@@ -33,15 +33,15 @@ def sp_category(categories, category_id):
 @register.filter
 def time_passed(pre_time, cur_time=datetime.now()):
     cur_time=datetime.now()
+    res = str(pre_time) + "--"
     td = cur_time - pre_time
     if td.days>0:
-        return '%2d天之前' % td.days
+        res += '%d天' % td.days
+    else:
+        hours, seconds = divmod(td.seconds, 3600)
+        minutes, seconds = divmod(seconds, 60)
+        if hours>0:  res += '%d小时' % hours
+        if minutes>0: res += '%d分' % minutes
+        if seconds>=0: res += '%d秒' % seconds
 
-    hours, seconds = divmod(td.seconds, 3600)
-    minutes, seconds = divmod(seconds, 60)
-    res = ''
-    if hours>0:  res = '%2d小时' % hours
-    if minutes>0: res += '%2d分' % minutes
-    if seconds>=0: res += '%2d秒' % seconds
-
-    return res + '之前' + str(pre_time)
+    return res + '前'

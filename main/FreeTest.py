@@ -22,5 +22,6 @@ def jieba_test():
 
 
 if __name__ == '__main__':
-    jieba_test()
+    import sys
+    print sys.argv[0]
     pass

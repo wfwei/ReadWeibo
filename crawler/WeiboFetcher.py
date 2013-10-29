@@ -11,10 +11,14 @@ from djangodb.WeiboDao import WeiboDao
 from djangodb.CommentDao import CommentDao
 from main import Config
 from libweibo import weibo
-wclient = weibo.APIClient(app_key=Config.weibo_app_key,
-                    app_secret = Config.weibo_app_secret,
-                    redirect_uri = Config.callback_url)
-wclient.set_access_token(Config.default_access_token, Config.default_access_token_expires_in)
+
+WEIBO_API = Config.WEIBO_API_GGZZ
+wclient = weibo.APIClient(app_key = WEIBO_API['app_key'],
+                       app_secret = WEIBO_API['app_secret'],
+                     redirect_uri = WEIBO_API['callback_url'])
+wclient.set_access_token(
+        WEIBO_API['default_access_token'],
+        WEIBO_API['default_token_expire'])
 
 from ReadWeibo.account.models import Account
 from ReadWeibo.mainapp.models import Weibo
@@ -23,7 +27,7 @@ from time import sleep
 import traceback
 import logging
 
-_request_interval = 1 # secodes
+_request_interval = 6 # secodes
 
 def FetchUserTimeline(w_uid, append=True, max_count=1000, max_interval=100):
     '''
@@ -95,6 +99,7 @@ def FetchComments(w_id, max_count=1000):
         comments = wclient.get.comments__show(id=w_id,
                                             count=page_size,
                                             page=page_id)
+        sleep(_request_interval)
         if not comments or not comments[u'comments']:
             logging.info('No comments found')
             break
@@ -117,7 +122,6 @@ def FetchComments(w_id, max_count=1000):
             break
         else:
             page_id += 1
-            sleep(_request_interval)
 
     if tot_fetched>0:
         logging.info('Fetch over Comments for  %s Over with %d new' % (status, tot_fetched))
@@ -141,6 +145,7 @@ def FetchHomeTimeline(w_uid, max_count=5000):
         result = wclient.get.statuses__home_timeline(uid=w_uid,
                                                     count=page_size,
                                                     page=page_id)
+        sleep(_request_interval)
         if not result or not result[u'statuses']:
             logging.info('No more statuses in %s\'s home time line, total updated %d'
                          % (user, tot_fetched))
@@ -166,7 +171,6 @@ def FetchHomeTimeline(w_uid, max_count=5000):
         else:
             logging.info('Fetched %d statuses' % tot_fetched)
             page_id += 1
-            sleep(_request_interval)
 
     if tot_fetched>0:
         logging.info('Fetch over HomeTimeline for  %s Over with %d new' % (user, tot_fetched))

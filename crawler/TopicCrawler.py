@@ -8,11 +8,13 @@ Created on 2013-10-8
 from ReadWeibo.mainapp.models import Category, Weibo
 from ReadWeibo.account.models import Account
 from crawler import WeiboFetcher
-
-from datetime import datetime, timedelta
 from main import Config
+
+from django.db.models import F
+from datetime import datetime, timedelta
 import logging
 import time
+import thread
 
 def crawl_user_timeline(w_uid, sleep_interval=3600):
     ''' crawl user timeline '''
@@ -37,7 +39,7 @@ def crawl_user_timeline(w_uid, sleep_interval=3600):
         else:
             logging.info('No need for sleep')
 
-def crawl_comments(category_id, update_interval=timedelta(days=2), sleep_interval=3600):
+def crawl_comments(category_id, max_time=datetime.now()-timedelta(days=2), sleep_interval=3600*2):
     ''' crawl weibo comments in category '''
 
     category = Category.objects.get(category_id=category_id)
@@ -53,14 +55,13 @@ def crawl_comments(category_id, update_interval=timedelta(days=2), sleep_interva
         logging.info('There are %d users in category:%s' % (len(target_users), category))
         for user in target_users:
 
-            weibos = user.ownweibo.filter(created_at__gt=datetime.now()-update_interval).\
-                    filter(created_at__lt=datetime.now()-timedelta(seconds=12000))
+            weibos = user.ownweibo.filter(created_at__lt=max_time).\
+                    filter(last_update_comments__lt=F('created_at')+ timedelta(days=1))
 
             logging.info('%d weibo from %s ' % (len(weibos), user))
 
             for weibo in weibos:
                 WeiboFetcher.FetchComments(w_id=weibo.w_id)
-                time.sleep(0.5)
 
         end = time.time()
         logging.info('crawl comments one round time: %d seconds' % int(end-start))
@@ -71,7 +72,6 @@ def crawl_comments(category_id, update_interval=timedelta(days=2), sleep_interva
         else:
             logging.info('No need for sleep')
 
-
 if __name__ == '__main__':
-    #crawl_user_timeline(w_uid=1698863684)
-    crawl_comments(category_id=1, update_interval=timedelta(days=100))
+    crawl_user_timeline(w_uid=1698863684)
+    #crawl_comments(category_id=1, max_time=datetime.now()-timedelta(days=4))

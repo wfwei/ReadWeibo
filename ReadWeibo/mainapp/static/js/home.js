@@ -9,7 +9,7 @@ function set_weibo_category(w_id, category) {
             if (return_val) {
                 $("#category-button-"+w_id)[0].innerText = return_val;
             }else{
-                alert('Fail');
+                alert('Fail:Permission Denied');
             }
         }
     });
@@ -26,7 +26,7 @@ function set_user_category(u_id, category) {
             if (return_val) {
                 $("#category-button-"+u_id)[0].innerText = return_val;
             }else{
-                alert('Fail');
+                alert('Fail:Permission Denied');
             }
         }
     });

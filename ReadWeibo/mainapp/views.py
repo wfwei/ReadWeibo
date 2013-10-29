@@ -146,6 +146,8 @@ def show_user_weibos(request, w_uid=0, show_predict=False):
 
 
 def set_weibo_category(request):
+    if not request.user.is_authenticated() or request.user.username!='WeBless':
+        return HttpResponse(simplejson.dumps(False), _mimetype)
     if not request.is_ajax():
         return HttpResponse('ERROR:NOT AJAX REQUEST')
     post_data = simplejson.loads(request.raw_post_data)
@@ -170,6 +172,8 @@ def set_weibo_category(request):
 
 
 def set_user_category(request):
+    if not request.user.is_authenticated() or request.user.username!='WeBless':
+        return HttpResponse(simplejson.dumps(False), _mimetype)
     if not request.is_ajax():
         return HttpResponse('ERROR:NOT AJAX REQUEST')
     post_data = simplejson.loads(request.raw_post_data)
