@@ -30,17 +30,19 @@ class WeiboDao:
                 wb.bmiddle_pic = status[u'bmiddle_pic']
             if u'original_pic' in status:
                 wb.original_pic = status[u'original_pic']
-            
+
             if u'user' in status:
                 wb.owner = AccountDao.create_or_update(status[u'user'])
 
             if u'retweeted_status' in status:
                 wb.retweeted_status = WeiboDao.create_or_update(status[u'retweeted_status'])
 
-
-        wb.reposts_count = status[u'reposts_count']
-        wb.comments_count = status[u'comments_count']
-        wb.attitudes_count = status[u'attitudes_count']
+        if u'reposts' in status:
+            wb.reposts_count = status[u'reposts_count']
+        if u'comments_count' in status:
+            wb.comments_count = status[u'comments_count']
+        if u'attitudes_count' in status:
+            wb.attitudes_count = status[u'attitudes_count']
         wb.fetched_at = datetime.now()
         wb.save()
 
@@ -73,9 +75,12 @@ class WeiboDao:
                 wb.retweeted_status.watcher.add(wb.owner)
 
 
-        wb.reposts_count = status[u'reposts_count']
-        wb.comments_count = status[u'comments_count']
-        wb.attitudes_count = status[u'attitudes_count']
+        if u'reposts' in status:
+            wb.reposts_count = status[u'reposts_count']
+        if u'comments_count' in status:
+            wb.comments_count = status[u'comments_count']
+        if u'attitudes_count' in status:
+            wb.attitudes_count = status[u'attitudes_count']
         wb.fetched_at = datetime.now()
         wb.save()
 

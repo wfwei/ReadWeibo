@@ -43,21 +43,8 @@ class Weibo(models.Model):
     owner = models.ForeignKey(Account, related_name='ownweibo', blank=True, null=True, on_delete=models.SET_NULL) #owner
     watcher = models.ManyToManyField(Account, related_name='watchweibo', blank=True, null=True)
 
-    # last update comments
-    last_update_comments = models.DateTimeField(default='1000-09-04 19:01:08')
-
-    def need_update_comments(self, min_update_interval=3600*5):
-        td = self.last_update_comments - self.created_at
-        # have updated, no need again
-        if td.days > 1:
-            return False
-
-        td = datetime.now()-self.last_update_comments
-        # update recently
-        if td.seconds > min_update_interval:
-            return False
-
-        return True
+    # last time that update comments and reposts
+    last_update_cmt_repost = models.DateTimeField(default='1000-09-04 19:01:08')
 
     def __unicode__(self):
         return u'{type:weibo, w_id:%s}' % self.w_id

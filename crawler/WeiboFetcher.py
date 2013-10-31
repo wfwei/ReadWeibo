@@ -27,13 +27,18 @@ from time import sleep
 import traceback
 import logging
 
-_request_interval = 6 # secodes
+_request_interval = 4.5 # secodes
 
 def FetchUserTimeline(w_uid, append=True, max_count=1000, max_interval=100):
     '''
     获取当前用户所发布的微博，需要授权
     '''
-    user = Account.objects.get(w_uid=w_uid)
+    try:
+        user = Account.objects.get(w_uid=w_uid)
+    except Exception:
+        logging.error('no user found for id:%s' % w_uid)
+        return
+
     if user.oauth and not user.oauth.is_expired():
         wclient.set_access_token(user.oauth.access_token, user.oauth.expires_in)
     else:
@@ -84,54 +89,96 @@ def FetchUserTimeline(w_uid, append=True, max_count=1000, max_interval=100):
     else:
         logging.warn('No new statuses found in %s time line' % user)
 
+def FetchComments(w_id, min_time, max_count=1000):
+    ''' fetch comments of a status'''
 
-def FetchComments(w_id, max_count=1000):
-    status = Weibo.objects.get(w_id=w_id)
-    if not status:
+    try:
+        status = Weibo.objects.get(w_id=w_id)
+    except Exception:
         logging.error('no status found for %s' % w_id)
         return
-    if not status.need_update_comments():
-        logging.info('Update comments recently, skip in this round')
-        return
+    else:
+        logging.info('Start fetching comments of %s' % status)
 
     page_id = 1; page_size = 100; tot_fetched = 0; over = False
     while not over:
-        comments = wclient.get.comments__show(id=w_id,
+        result = wclient.get.comments__show(id=w_id,
                                             count=page_size,
                                             page=page_id)
         sleep(_request_interval)
-        if not comments or not comments[u'comments']:
+        if not result or not result[u'comments']:
             logging.info('No comments found')
             break
 
-        for comment in comments[u'comments']:
+        for cmt_json in result[u'comments']:
             try:
-                cmt = CommentDao.create_or_update(comment)
+                cmt = CommentDao.create_or_update(cmt_json)
                 logging.info('Fetched new comments:%s' % cmt)
-                if cmt.created_at<status.last_update_comments:
+                if cmt.created_at<min_time:
                     over = True
                     break
             except Exception:
-                logging.warn('Fail to parsing comment: %s', comment)
+                logging.warn('Fail to parsing comment: %s' % cmt_json)
                 logging.warn(traceback.format_exc())
             else:
                 tot_fetched += 1
 
         if tot_fetched>max_count or over:
-            logging.info('Fetch over %s\'s comments with %d new' % (status, tot_fetched))
             break
         else:
             page_id += 1
 
-    if tot_fetched>0:
-        logging.info('Fetch over Comments for  %s Over with %d new' % (status, tot_fetched))
-        status.last_update_comments = datetime.now()
-        status.save()
+    logging.info('Fetch over %s\'s comments with %d new' % (status, tot_fetched))
+    return tot_fetched
+
+def FetchReposts(w_id, min_time, max_count=1000):
+    ''' fetch resposts of a status'''
+
+    try:
+        status = Weibo.objects.get(w_id=w_id)
+    except Exception:
+        logging.error('no status found for %s' % w_id)
+        return
     else:
-        logging.warn('No new comments found for %s' % status)
+        logging.info('Start fetching reposts of %s' % status)
+
+    page_id = 1; page_size = 200; tot_fetched = 0; over = False
+    while not over:
+        result = wclient.get.statuses__repost_timeline(id=w_id,
+                                                        count=page_size,
+                                                        page=page_id)
+        sleep(_request_interval)
+        if not result or not result[u'reposts']:
+            logging.info('No reposts found: %s' % result)
+            break
+
+        for repost_json in result[u'reposts']:
+            try:
+                repost = WeiboDao.create_or_update(repost_json)
+                logging.info('Fetched new repost:%s' % repost)
+                if repost.created_at<min_time:
+                    over = True
+                    break
+            except Exception:
+                logging.warn('Fail to parsing repost: %s' % repost_json)
+                logging.warn(traceback.format_exc())
+            else:
+                tot_fetched += 1
+
+        if tot_fetched>max_count or over:
+            break
+        else:
+            page_id += 1
+
+    logging.info('Fetch over %s\'s reposts with %d new' % (status, tot_fetched))
+    return tot_fetched
 
 def FetchHomeTimeline(w_uid, max_count=5000):
-    user = Account.objects.get(w_uid=w_uid)
+    try:
+        user = Account.objects.get(w_uid=w_uid)
+    except Exception:
+        logging.error('no user found for id:%s' % w_uid)
+        return
     if not user.oauth or user.oauth.is_expired():
         logging.warn('OAuth(%s) Expired for %s' % (user.oauth, user))
         return
@@ -178,9 +225,4 @@ def FetchHomeTimeline(w_uid, max_count=5000):
         user.save()
     else:
         logging.warn('No new statuses found in %s home time line' % user)
-
-if __name__ == '__main__':
-#     FetchHomeTimeline(1698863684)
-#     FetchUserTimeline(1698863684)
-    FetchComments(3633787348598149)
 

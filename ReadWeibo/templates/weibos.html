@@ -11,7 +11,7 @@
 {% block main %}
 
 <div class="span5">
-    {% for weibo in watch_weibo_left %}
+    {% for weibo in weibo_list_left %}
 
     {% include "weibo-card.html" %}
 
@@ -20,7 +20,7 @@
 
 <div class="span5">
 
-    {% for weibo in watch_weibo_right %}
+    {% for weibo in weibo_list_right %}
 
     {% include "weibo-card.html" %}
 

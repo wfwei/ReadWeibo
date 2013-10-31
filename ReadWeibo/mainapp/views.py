@@ -28,10 +28,44 @@ _mimetype = u'application/javascript, charset=utf8'
 wclient = weibo.APIClient(app_key=Config.weibo_app_key,
                     app_secret = Config.weibo_app_secret,
                     redirect_uri = Config.callback_url)
-all_categories = Category.objects.all()
+all_categories = Category.objects.exclude(category_id=0)
 default_user = Account.objects.get(w_name='WeBless')
 
-def home(request):
+def home(request, category_id=1):
+    ''' show statuses from users in category '''
+    try:
+        category = Category.objects.get(category_id=category_id)
+    except:
+        logging.warn('No category found')
+        return HttpResponse('No category found for id:%s' % category_id)
+
+    logging.info('current login user: %s, show statuses from users in %s' % (request.user, category))
+
+    if request.user.is_authenticated() and not request.user.is_superuser:
+        user = Account.objects.get(w_name=request.user.username)
+    else:
+        user = default_user
+
+    template_var = {}
+
+    weibo_list = Weibo.objects.filter(owner__in=Account.objects.filter(real_category=category_id))\
+                            .filter(real_category=0)[:40]
+
+    messages = 'Latest Statuses from users in %s' % category
+
+    size = len(weibo_list) / 2;
+    template_var['weibo_list_left'] = weibo_list[:size]
+    template_var['weibo_list_right'] = weibo_list[size:]
+    template_var['cur_user'] = user
+    template_var['category_id'] = category_id
+    template_var['all_categories'] = all_categories
+    template_var['authorize_url'] = wclient.get_authorize_url()
+
+    template_var['messages'] = messages
+
+    return render_to_response("weibos.html", template_var,
+                              context_instance=RequestContext(request))
+
     return show_weibos(request,1)
 
 def show_weibos_predict(request, category_id=0, show_predict=True):
@@ -63,8 +97,8 @@ def show_weibos(request, category_id=0, show_predict=False):
         messages = 'Non-Predict View: '
 
     size = len(watch_weibo) / 2;
-    template_var['watch_weibo_left'] = watch_weibo[:size]
-    template_var['watch_weibo_right'] = watch_weibo[size:]
+    template_var['weibo_list_left'] = watch_weibo[:size]
+    template_var['weibo_list_right'] = watch_weibo[size:]
     template_var['cur_user'] = user
     template_var['category_id'] = category_id
     template_var['all_categories'] = all_categories
@@ -119,7 +153,7 @@ def show_users(request, category_id=0, show_predict=False):
     return render_to_response("users.html", template_var,
                               context_instance=RequestContext(request))
 
-def show_user_weibos(request, w_uid=0, show_predict=False):
+def show_user_weibos(request, w_uid=0, category_id=0, show_predict=False):
     logging.info('w_uid:%s, type:%s' % (w_uid, type(w_uid)))
     try:
         user = Account.objects.get(w_uid=w_uid)
@@ -130,10 +164,10 @@ def show_user_weibos(request, w_uid=0, show_predict=False):
     logging.info('current login user: %s, show %s\' weibos' % (request.user, user))
 
     template_var = {}
-    watch_weibo = user.ownweibo.all()[:40] #.filter(retweeted_status__exact=None)[:40]
+    watch_weibo = user.ownweibo.filter(real_category=category_id)[:40]
     size = len(watch_weibo) / 2;
-    template_var['watch_weibo_left'] = watch_weibo[:size]
-    template_var['watch_weibo_right'] = watch_weibo[size:]
+    template_var['weibo_list_left'] = watch_weibo[:size]
+    template_var['weibo_list_right'] = watch_weibo[size:]
     template_var['all_categories'] = all_categories
     template_var['messages'] = 'show %s\'s weibos %d/%d' % \
             (user.w_name, len(watch_weibo), user.ownweibo.count())

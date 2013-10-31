@@ -28,7 +28,7 @@ def sp_category(categories, category_id):
     for category in categories:
         if category.category_id == category_id:
             return category.name
-    return 'INVALID'
+    return '未分类'
 
 @register.filter
 def time_passed(pre_time, cur_time=datetime.now()):
