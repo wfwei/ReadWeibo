@@ -19,6 +19,9 @@ class Category(models.Model):
     keywords = models.TextField(blank=True)
     model = models.TextField(blank=True)
 
+    #static parameters
+    NO_CATEGORY = 0
+
     def __unicode__(self):
         return u'{type:category, category_id:%s, name:%s}' % (self.category_id, self.name)
 

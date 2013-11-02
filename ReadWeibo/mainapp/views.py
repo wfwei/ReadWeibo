@@ -48,7 +48,7 @@ def home(request, category_id=1):
 
     template_var = {}
 
-    weibo_list = Weibo.objects.filter(owner__in=Account.objects.filter(real_category=category_id))\
+    weibo_list = Weibo.objects.filter(owner__in=Account.objects.filter(predict_category=category_id))\
                             .filter(real_category=0)[:40]
 
     messages = 'Latest Statuses from users in %s' % category
@@ -61,7 +61,7 @@ def home(request, category_id=1):
     template_var['all_categories'] = all_categories
     template_var['authorize_url'] = wclient.get_authorize_url()
 
-    template_var['messages'] = messages
+    #template_var['messages'] = messages
 
     return render_to_response("weibos.html", template_var,
                               context_instance=RequestContext(request))
@@ -80,20 +80,12 @@ def show_weibos(request, category_id=0, show_predict=False):
 
     logging.info('current login user: %s, show %s' % (request.user, category))
 
-    if request.user.is_authenticated() and not request.user.is_superuser:
-        user = Account.objects.get(w_name=request.user.username)
-    else:
-        user = default_user
-
-    # fetch new weibo
-    # if category_id == 0:
-    #       thread.start_new_thread(WeiboFetcher.FetchHomeTimeline,(user.w_uid, ))
     template_var = {}
     if show_predict:
-        watch_weibo = user.watchweibo.filter(predict_category=category_id)[:40] #.filter(retweeted_status__exact=None)[:40]
+        watch_weibo = Weibo.objects.filter(predict_category=category_id)[:40] #.filter(retweeted_status__exact=None)[:40]
         messages = 'Predict View: '
     else:
-        watch_weibo = user.watchweibo.filter(real_category=category_id)[:40] #.filter(retweeted_status__exact=None)[:40]
+        watch_weibo = Weibo.objects.filter(real_category=category_id)[:40] #.filter(retweeted_status__exact=None)[:40]
         messages = 'Non-Predict View: '
 
     size = len(watch_weibo) / 2;
@@ -126,22 +118,16 @@ def show_users(request, category_id=0, show_predict=False):
 
     logging.info('current login user: %s, show %s' % (request.user, category))
 
-    if request.user.is_authenticated() and not request.user.is_superuser:
-        user = Account.objects.get(w_name=request.user.username)
-        logging.info('Current Login user: %s' % user)
-    else:
-        logging.info('Anonymouse user, use default user:%s' % default_user)
-        user = default_user
-
     template_var = {}
     template_var['category'] = category
 
     if show_predict:
-        category_users = user.friends.filter(predict_category=category_id)
+        category_users = Account.objects.filter(predict_category=category_id)
         messages = 'Predict view:'
     else:
-        category_users = user.friends.filter(real_category=category_id)
+        category_users = Account.objects.filter(real_category=category_id)
         messages = 'Non-Predict view:'
+
     template_var['category_users'] = category_users
     template_var['all_categories'] = all_categories
 
@@ -180,7 +166,7 @@ def show_user_weibos(request, w_uid=0, category_id=0, show_predict=False):
 
 
 def set_weibo_category(request):
-    if not request.user.is_authenticated() or request.user.username!='WeBless':
+    if not request.user.is_authenticated() or not request.user.is_superuser:
         return HttpResponse(simplejson.dumps(False), _mimetype)
     if not request.is_ajax():
         return HttpResponse('ERROR:NOT AJAX REQUEST')
@@ -206,7 +192,7 @@ def set_weibo_category(request):
 
 
 def set_user_category(request):
-    if not request.user.is_authenticated() or request.user.username!='WeBless':
+    if not request.user.is_authenticated() or not request.user.is_superuser:
         return HttpResponse(simplejson.dumps(False), _mimetype)
     if not request.is_ajax():
         return HttpResponse('ERROR:NOT AJAX REQUEST')

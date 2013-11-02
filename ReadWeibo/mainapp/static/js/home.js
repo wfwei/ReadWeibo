@@ -51,5 +51,18 @@ $(document).ready(function () {
     set_user_category(uid_cate[0], uid_cate[1]);
    });
         
+   $(".weibo-img-container").click(function (e) {
+    if (!e.target) {
+        return;
+    }
+    par  = e.target.parentNode
+    if(par.style.maxHeight=="200px"){
+        par.style.maxHeight= "inherit";
+    }else{
+        par.style.maxHeight= "200px";
+    }
+
+   });
+        
 });
 

@@ -20,7 +20,7 @@
                 <p>{{weibo.text}}</p>
             {% endif %}
             {% if weibo.bmiddle_pic %}
-                <div class="weibo-img-container" >
+            <div class="weibo-img-container" id="weibo-img-container-{{weibo.w_id}}">
                     <img src="{{weibo.bmiddle_pic}}" class="full" />
                 </div>
             {% endif %}

@@ -55,9 +55,10 @@ def weibo_callback(request):
             account.user = user
 
         account.oauth=oauth
-        account.save()
     else:
         account = Account.objects.get(w_uid=w_uid)
+
+    account.save()
 
     account.user.backend = 'django.contrib.auth.backends.ModelBackend'
     auth_login(request, account.user)
