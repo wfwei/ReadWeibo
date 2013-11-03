@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import simplejson
 
 from ReadWeibo.account.models import Account, UserOauth2
 from ReadWeibo.mainapp.models import Weibo, Category

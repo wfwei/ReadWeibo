@@ -13,7 +13,9 @@ from crawler import UserFetcher, TopicCrawler
 import sys
 import logging
 import thread
+
 import jieba
+jieba.load_userdict("/etc/jieba/jieba.dic")
 
 class WeiboClassifer():
     ''' classify weibo'''

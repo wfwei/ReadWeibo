@@ -22,7 +22,6 @@ from datetime import datetime
 from time import sleep
 import traceback
 import logging
-import jieba
 
 def FetchFriends(w_uid, max_count=500):
 	'''

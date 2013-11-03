@@ -11,9 +11,11 @@ from ReadWeibo.account.models import Account
 from djangodb.WeiboDao import WeiboDao
 from datetime import datetime
 from sets import Set
-import jieba
 import numpy as np
 import re
+
+import jieba
+jieba.load_userdict("/etc/jieba/jieba.dic")
 
 DIC_FILE = "../data/dic/weibo.dic"
 TRAIN_FILE = "../data/train/weibo_vec.tr"
@@ -22,9 +24,9 @@ TRAIN_FILE = "../data/train/weibo_vec.tr"
 def generate_user_dict(dic_file=DIC_FILE):
 	wbs = Weibo.objects.all()[:5000]
 	wordset = Set()
-	
+
 	print 'Generating dict with %d weibo' % len(wbs)
-	
+
 	for wb in wbs:
 		for word in jieba.cut(wb.text.encode('utf-8','ignore')):
 			if len(word)>6: #TODO filter by Cixing
@@ -114,14 +116,14 @@ def generate_feature(wb, dict):
 	return fea
 
 def generate_train_file():
-	
+
 	print 'Generating train file...'
-	
+
 	wbs = Weibo.objects.filter(real_category__gt=0)
 	word_dic = load_dict()
-	
+
 	print 'Train set size: %d, dic size:%d' % (len(wbs), len(word_dic))
-	
+
 	with open(TRAIN_FILE, "w") as train_file:
 		for wb in wbs:
 			for fea in generate_feature(wb, word_dic):
@@ -129,7 +131,7 @@ def generate_train_file():
 			train_file.write("%s\n" % wb.real_category)
 
 def get_weibo_to_predict(count=1000):
-	
+
 	wbs = Weibo.objects.filter(real_category__exact = 0)[:count]
 	word_dic = load_dict()
 	wb_feas_list = list()
@@ -138,9 +140,9 @@ def get_weibo_to_predict(count=1000):
 			wb_feas_list.append((wb, [1.0] + generate_feature(wb, word_dic)));
 		except:
 			print 'generate feature fail for weibo:', wb.w_id
-	
+
 	return wb_feas_list
-	
+
 if __name__ == '__main__':
 	generate_user_dict()
 	generate_train_file()
