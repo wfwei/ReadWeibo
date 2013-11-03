@@ -80,5 +80,5 @@ def crawl_cmt_repost_by_category(category_id, update_interval=timedelta(days=2),
             logging.info('No need for sleep')
 
 if __name__ == '__main__':
-    crawl_home_timeline(w_uid=1698863684)
-    #crawl_cmt_repost_by_category(category_id=1)
+    #crawl_home_timeline(w_uid=1698863684)
+    crawl_cmt_repost_by_category(category_id=1)

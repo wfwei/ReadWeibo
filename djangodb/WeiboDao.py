@@ -36,6 +36,9 @@ class WeiboDao:
 
             if u'retweeted_status' in status:
                 wb.retweeted_status = WeiboDao.create_or_update(status[u'retweeted_status'])
+                wb.predict_category = wb.retweeted_status.predict_category
+                wb.real_category = wb.retweeted_status.real_category
+
 
         if u'reposts' in status:
             wb.reposts_count = status[u'reposts_count']

@@ -7,25 +7,19 @@
 <link rel="stylesheet" media="all" charset="utf-8" href="{{STATIC_URL}}css/home.css"/>
 <link rel="stylesheet" media="all" charset="utf-8" href="{{STATIC_URL}}css/google-now-card.css"/>
 {% endblock %}
-            
+
+
 {% block main %}
 
-<div class="span5">
-    {% for weibo in weibo_list_left %}
+<div id="container" class="js-masonry" data-masonry-options='{ "columnWidth": 100, "itemSelector": ".item" }'>
 
-    {% include "weibo-card.html" %}
+    {% for weibo in weibo_list %}
 
-    {% endfor %}
-</div>
-
-<div class="span5">
-
-    {% for weibo in weibo_list_right %}
-
-    {% include "weibo-card.html" %}
+    <div class="item">
+        {% include "weibo-card.html" %}
+    </div>
 
     {% endfor %}
-  
 
 </div>
 

@@ -33,7 +33,7 @@ def sp_category(categories, category_id):
 @register.filter
 def time_passed(pre_time, cur_time=datetime.now()):
     cur_time=datetime.now()
-    res = str(pre_time) + "--"
+    res = ""
     td = cur_time - pre_time
     if td.days>0:
         res += '%d天' % td.days

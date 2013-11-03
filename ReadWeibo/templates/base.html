@@ -11,73 +11,59 @@
             {% block title%}{% endblock%}
         </title>
         <link href="{{STATIC_URL}}css/bootstrap.css" rel="stylesheet" media="screen">
+        <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" />
         {% block extra_css %}{% endblock %}
         {% block head %}{% endblock %}
         
     </head>
-    <body data-spy="scroll">
+    <body >
     
         <!--top-menu-bar -->
-        <div class="navbar navbar-inverse navbar-fixed-top" id="top-menu-bar">
-          <div class="navbar-inner">
-            <div class="container-fluid">
-              <a class="brand" href="/">ReadWeibo</a>
-              <div class="nav-collapse collapse">
-                <p class="navbar-text pull-right">
-                  {% if user.is_authenticated %}
-                    <a href="{{user_weibo_link}}" class="navbar-link">Hey, @{{ user.username }}</a>
-                    {% else %}
-                        <a href={{ authorize_url }}><img src="http://www.sinaimg.cn/blog/developer/wiki/24.png"></a>
-                  {% endif %}
-                </p>
-              </div><!--/.nav-collapse -->
+        <div class="navbar navbarinverse navbar-fixed-top" id="top-menu-bar">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="brand" href="/">ReadWeibo</a>
+                    <div class="nav-collapse collapse">
+
+                        <ul class="nav">
+                            <li class="divider-vertical"></li>
+
+                            <li class="">
+                                <a href="/weibo/category/1">
+                                    <i class="icon-book"></i>
+                                    机器学习微博
+                                </a>
+                            </li>
+
+                            <li class="">
+                                <a href="/user/category/1">
+                                    <i class="icon-user"></i>
+                                    机器学习用户
+                                </a>
+                            </li>
+
+                            <li class="">
+                                <a href="/weibo/label/">
+                                    <i class="icon-pencil"></i>
+                                    我要分类
+                                </a>
+                            </li>
+                        </ul>
+                        <p class="navbar-text pull-right">
+                            {% if user.is_authenticated %}
+                            <a href="{{user_weibo_link}}" class="navbar-link">Hey, @{{ user.username }}</a>
+                            {% else %}
+                            <a href={{ authorize_url }}><img src="http://www.sinaimg.cn/blog/developer/wiki/24.png"></a>
+                            {% endif %}
+                        </p>
+                    </div><!--/.nav-collapse -->
+                </div>
             </div>
-          </div>
         </div>
         <!--end-top-menu-bar -->
-        <br />
-        <br />
-        <br />
-    
-    <div class="span1" id="left-part">
 
-        <ul class="nav nav-list" id="category-bar">
+        <br /> <br /> <br /> 
 
-            <li class="nav-header">
-                <i class="icon-user"></i>
-                用户分类
-            </li>
-            {% for category in all_categories %}
-            <li><a href="/user/category/{{category.category_id}}">{{category.name}}</a></li>
-            {% endfor %}
-            <li class="nav-header">
-                <i class="icon-book"></i>
-                微博分类
-            </li>
-            {% for category in all_categories %}
-            <li><a href="/weibo/category/{{category.category_id}}">{{category.name}}</a></li>
-            {% endfor %}
-            
-            <li class="nav-header">===</li>
-            <li class="nav-header">预测</li>
-            <li class="nav-header">===</li>
-            <li class="nav-header">
-                <i class="icon-user"></i>
-                用户分类
-            </li>
-            {% for category in all_categories %}
-            <li><a href="/user/category_predict/{{category.category_id}}">{{category.name}}</a></li>
-            {% endfor %}
-            <li class="nav-header">
-                <i class="icon-book"></i>
-                微博分类
-            </li>
-            {% for category in all_categories %}
-            <li><a href="/weibo/category_predict/{{category.category_id}}">{{category.name}}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div id="right-part" class="span11">
         {%if messages %}
         <div class="alert alert-info">
             <a class="close" data-dismiss="alert">×</a>
@@ -86,9 +72,9 @@
         {% endif %}
         {% block main %}
         {% endblock %}
-    </div>
 
         <script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.8.3.min.js"></script>
+        <script type="text/javascript" src="{{STATIC_URL}}js/masonry.pkgd.min.js"></script>
         <script src="{{STATIC_URL}}js/bootstrap.js"></script>
         {% block extra_scripts %}{% endblock %}
     </body>

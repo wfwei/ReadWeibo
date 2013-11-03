@@ -8,8 +8,10 @@ Created on Oct 12, 2012
 '''
 
 from django.db import models
+from django.utils.dateformat import *
 
 from ReadWeibo.account.models import Account
+
 from datetime import datetime
 
 class Category(models.Model):
@@ -49,6 +51,9 @@ class Weibo(models.Model):
     # last time that update comments and reposts
     last_update_cmt_repost = models.DateTimeField(default='1000-09-04 19:01:08')
 
+    def format_created_at(self):
+        return format(self.created_at, "Y-m-d H:m:s")
+
     def __unicode__(self):
         return u'{type:weibo, w_id:%s}' % self.w_id
 
@@ -69,6 +74,9 @@ class Comment(models.Model):
 
     def __unicode__(self):
         return u'{type:comments, c_id:%s}' % self.c_id
+
+    def format_created_at(self):
+        return format(self.created_at, "Y-m-d H:m:s")
 
     class Meta:
         ordering = ["-c_id"]

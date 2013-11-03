@@ -56,10 +56,10 @@ $(document).ready(function () {
         return;
     }
     par  = e.target.parentNode
-    if(par.style.maxHeight=="200px"){
+    if(par.style.maxHeight=="250px"){
         par.style.maxHeight= "inherit";
     }else{
-        par.style.maxHeight= "200px";
+        par.style.maxHeight= "250px";
     }
 
    });

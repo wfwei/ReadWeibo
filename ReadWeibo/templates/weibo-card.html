@@ -27,6 +27,7 @@
 
             <p>{{ weibo.created_at|time_passed }}</p>
 
+            {% if user.is_superuser %}
             <div class="btn-group">
                 <button id="category-button-{{weibo.w_id}}" class="btn btn-mini btn-primary" data-toggle="dropdown">
                     {{all_categories|sp_category:weibo.real_category}}
@@ -43,6 +44,7 @@
                 </ul>
             </div>
             <span class="label {% if weibo.real_category == weibo.predict_category %} label-success {% else %} label-warning{% endif %}">{{all_categories|sp_category:weibo.predict_category}}</span> 
+            {% endif %}
         </div>
     </li>
 </ul>

@@ -1,0 +1,37 @@
+{% load common_filter %}
+
+<ul class="gNow" id="{{cur_user.w_uid}}">
+    <li>
+         <div class="card">
+            <p class="card-title">
+                <a href="/user/weibos/{{cur_user.w_uid}}">
+                @{{cur_user.w_name}}
+                </a>
+            </p>
+            <p>{{cur_user.w_description}}</p>
+
+            {% if user.is_superuser %}
+            
+            <span class="label {% if cur_user.real_category == cur_user.predict_category %} label-success {% else %} label-warning{% endif %}">{{all_categories|sp_category:cur_user.predict_category}}</span>
+
+            <div class="btn-group">
+                <button id="category-button-{{cur_user.w_uid}}" class="btn btn-mini btn-primary" data-toggle="dropdown">
+                    {{all_categories|sp_category:cur_user.real_category}}
+                    <span class="caret"></span>
+                </button>
+
+                <ul class="dropdown-menu">
+                    {% for category in all_categories %}
+                    <li>
+                        <a id="{{cur_user.w_uid}}-{{category.category_id}}"
+                            class="cur_user-category" href="JavaScript:void()">{{category.name}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </li>
+</ul>
+
+

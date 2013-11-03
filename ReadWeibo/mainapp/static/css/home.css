@@ -1,12 +1,8 @@
 @charset "UTF-8";
 
 .weibo-img-container {
-    max-height: 200px;  
+    max-height: 250px;  
     overflow: hidden; 
-}
-
-#category-bar {
-    position:fixed;
 }
 
 #user-table {
