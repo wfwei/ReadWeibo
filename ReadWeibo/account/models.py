@@ -37,7 +37,7 @@ class Account(models.Model):
 	user = models.ForeignKey(auth_models.User, null=True, on_delete=models.CASCADE) #绑定系统用户，可选
 	oauth = models.ForeignKey("UserOauth2", null=True, on_delete=models.CASCADE)
 	friends = models.ManyToManyField("self", related_name='followers', blank=True, null=True)
-	
+
 	# last update user info
 	last_update_info = models.DateTimeField(default='1000-09-04 19:01:08')
 	# last update user home time line
@@ -47,30 +47,30 @@ class Account(models.Model):
 	# last update user friends list
 	last_update_fri = models.DateTimeField(default='1000-09-04 19:01:08')
 	# last update user followers list
-	last_update_fol = models.DateTimeField(default='1000-09-04 19:01:08') 
+	last_update_fol = models.DateTimeField(default='1000-09-04 19:01:08')
 
 	def is_zombie(self):
 		return self.w_friends_count / (self.w_followers_count+1) >= 10
-	
+
 	def has_oauth(self):
 		return self.oauth and not self.oauth.is_expired()
-	
+
 	def need_update_info(self):
 		return (datetime.now()-self.last_update_info).days > 7 # more than seven days
-	
+
 	def need_update_htl(self):
 		return (datetime.now()-self.last_update_htl).seconds > 3600 # more than an hour
-	
+
 	def need_update_utl(self):
 		return (datetime.now()-self.last_update_utl).days > 1 # more than a day
-	
+
 	def need_update_fri(self):
 		return (datetime.now()-self.last_update_fri).days > 7 # more than seven days
-	
+
 	def need_update_fol(self):
 		return (datetime.now()-self.last_update_fol).days > 7 # more than seven days
-	
-	
+
+
 	def __unicode__(self):
 		return u'{type:Account, w_name:%s}' % (self.w_name);
 
@@ -81,13 +81,10 @@ class Account(models.Model):
 class UserOauth2(models.Model):
 
 	w_uid = models.BigIntegerField(db_index=True, unique=True)
-	access_token = models.CharField(max_length=100)
-	expires_in = models.CharField(max_length=100)
-	
+	access_token = models.CharField(max_length=100, null=True)
+	expires_in = models.CharField(max_length=100, null=True)
+
 	def is_expired(self):
 		return float(self.expires_in) < time.time()
-	
-	def __unicode__(self):
-		return u'{type:UserOauth2, w_uid:%s, is_expired:%s}' % \
-	        (self.w_id, self.is_expired())
+
 

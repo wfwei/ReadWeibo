@@ -25,9 +25,11 @@ import re
 # global static variables
 _DEBUG = True
 _mimetype = u'application/javascript, charset=utf8'
-wclient = weibo.APIClient(app_key=Config.weibo_app_key,
-                    app_secret = Config.weibo_app_secret,
-                    redirect_uri = Config.callback_url)
+
+wclient = weibo.APIClient(app_key = Config.WEIBO_API['app_key'],
+                       app_secret = Config.WEIBO_API['app_secret'],
+                     redirect_uri = Config.WEIBO_API['callback_url'])
+
 all_categories = Category.objects.exclude(category_id=0)
 
 def show_users_predict(request, category_id=0, show_predict=True):
@@ -116,29 +118,21 @@ def weibo_callback(request):
     access_token = _r.access_token
     expires_in = _r.expires_in
 
-    # 保存或更新授权信息
-    try:
-        oauth = UserOauth2.objects.get(w_uid = w_uid)
-        oauth.access_token = access_token
-        oauth.expires_in = expires_in
-        is_new = False
-    except ObjectDoesNotExist:
-        oauth = UserOauth2.objects.create(w_uid=w_uid, access_token=access_token, expires_in=expires_in)
-        is_new = True
+    oauth, created= UserOauth2.objects.get_or_create(w_uid=w_uid)
+    oauth.access_token = access_token
+    oauth.expires_in = expires_in
+    oauth.save()
 
-    if is_new:
-
+    if created:
         wclient.set_access_token(access_token, expires_in)
         uinfo = wclient.get.users__show(uid=w_uid)
-
         account = AccountDao.create_or_update(uinfo)
         if not account.user:
-            #create django.contrib.auth.models.User
-            user, ucreated = User.objects.get_or_create(username=uinfo[u'name'], password=w_uid)
-            if not ucreated: #微博名字有重复
-                user, ucreated = User.objects.get_or_create(username=uinfo['name']+w_uid, password=w_uid)
+            user, created = User.objects.get_or_create(username=uinfo[u'name'], password=w_uid)
+            if not created:
+                # duplicated user name, append the id
+                user, created = User.objects.get_or_create(username=uinfo['name']+w_uid, password=w_uid)
             account.user = user
-
         account.oauth=oauth
     else:
         account = Account.objects.get(w_uid=w_uid)

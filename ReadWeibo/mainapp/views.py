@@ -25,9 +25,11 @@ import re
 # global static variables
 _DEBUG = True
 _mimetype = u'application/javascript, charset=utf8'
-wclient = weibo.APIClient(app_key=Config.weibo_app_key,
-                    app_secret = Config.weibo_app_secret,
-                    redirect_uri = Config.callback_url)
+
+wclient = weibo.APIClient(app_key = Config.WEIBO_API['app_key'],
+                       app_secret = Config.WEIBO_API['app_secret'],
+                     redirect_uri = Config.WEIBO_API['callback_url'])
+
 all_categories = Category.objects.exclude(category_id=0)
 #default_user = Account.objects.get(w_name='WeBless')
 
@@ -40,7 +42,8 @@ def show_weibo_for_labeling(request):
     logging.info('show_weibo_for_labeling current login user: %s' % request.user)
 
 
-    weibo_list = Weibo.objects.filter(real_category=0).filter(retweeted_status__exact=None).filter(owner__in=Account.objects.filter(predict_category=1))[:40]
+    weibo_list = Weibo.objects.filter(real_category=0).filter(owner__in=Account.objects.filter(real_category=1))[:40]
+    #.filter(retweeted_status__exact=None)
 
     template_var = {}
     template_var['weibo_list'] = weibo_list

@@ -10,7 +10,6 @@ from django.db.models import Count
 
 from ReadWeibo.account.models import Account
 from ReadWeibo.mainapp.models import Category, Weibo
-from crawler import UserFetcher, TopicCrawler
 
 import sys
 import logging
@@ -89,7 +88,7 @@ class UserClassifer():
         rel_user_cnt= Weibo.objects.filter(real_category=1).values('owner').annotate(cnt=Count('owner')).order_by('-cnt')
         logging.info('There are %d users who have posted weibo in %s' % (len(rel_user_cnt), self.category))
 
-        cnt = 0; limit=4
+        cnt = 0; limit=10
         for item in rel_user_cnt:
             if item['cnt']<limit: break # TODO consider percentage
             user = Account.objects.get(id=item['owner'])

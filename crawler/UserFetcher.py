@@ -5,23 +5,18 @@ Created on 2013-10-7
 
 @author: plex
 '''
-from main import Config
+from ReadWeibo.account.models import Account
 from djangodb.AccountDao import AccountDao
 from libweibo import weibo
+from main import Config
 
-WEIBO_API = Config.WEIBO_API_GGZZ
-wclient = weibo.APIClient(app_key = WEIBO_API['app_key'],
-                       app_secret = WEIBO_API['app_secret'],
-                     redirect_uri = WEIBO_API['callback_url'])
-wclient.set_access_token(
-        WEIBO_API['default_access_token'],
-        WEIBO_API['default_token_expire'])
-
-from ReadWeibo.account.models import Account
 from datetime import datetime
 from time import sleep
-import traceback
 import logging
+
+wclient = weibo.APIClient(app_key = Config.WEIBO_API['app_key'],
+                       app_secret = Config.WEIBO_API['app_secret'],
+                     redirect_uri = Config.WEIBO_API['callback_url'])
 
 def FetchFriends(w_uid, max_count=500):
 	'''
@@ -61,9 +56,9 @@ def FetchFriends(w_uid, max_count=500):
 				else:
 					logging.info('new friend:%s' % friend_acc)
 					user.friends.add(friend_acc)
-			except Exception:
+			except Exception, e:
 				logging.warn('Fail to parse friend:%s', friend)
-				logging.error(traceback.format_exc())
+                logging.exception(e)
 		user.save()
 		cursor = int(friends['next_cursor'])
 
@@ -115,9 +110,9 @@ def FetchFollowers(w_uid, max_count=1000):
 					logging.info('new user:%s' % follower_acc)
 					follower_acc.friends.add(user)
 					follower_acc.save()
-			except Exception:
+			except Exception, e:
 				logging.warn('Fail to parse follower:%s', follower)
-				logging.warn(traceback.format_exc())
+                logging.exception(e)
 		cursor = int(followers['next_cursor'])
 
 		logging.info('Fetched %d followers' % cursor)
