@@ -10,6 +10,7 @@ from django.db.models import Count
 
 from ReadWeibo.account.models import Account
 from ReadWeibo.mainapp.models import Category, Weibo
+from main import Config
 
 import sys
 import logging

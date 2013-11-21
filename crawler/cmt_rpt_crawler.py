@@ -23,7 +23,7 @@ wclient = weibo.APIClient(app_key = '3233912973',
                        app_secret = '289ae4ee3da84d8c4c359312dc2ca17d')
 wclient.set_access_token(u'2.00l9nr_DfUKrWDf655d3279arZgVvD', u'1539839324')
 
-_request_interval = 4.5 # secodes
+_request_interval = 6 # secodes
 
 def crawl_cmt_repost(category_id, update_interval=timedelta(days=2), sleep_interval=3600*2):
     ''' crawl weibo comments and reposts in category '''
@@ -47,12 +47,18 @@ def crawl_cmt_repost(category_id, update_interval=timedelta(days=2), sleep_inter
                     filter(last_update_cmt_repost__lt=F('created_at')+ update_interval)
 
             logging.info('%d weibo from %s ' % (len(weibos), user))
+            try:
+                for weibo in weibos:
+                    cmt_fetched = fetch_comments(weibo, min_time=weibo.last_update_cmt_repost)
+                    repost_fetched = fetch_reposts(weibo, min_time=weibo.last_update_cmt_repost)
+                    weibo.last_update_cmt_repost = datetime.now()
+                    weibo.save()
+            except Exception,e :
+                logging.warn("Error in fetchinig comments or reposts:%s" % e)
+                logging.exception(e)
+                logging.info("sleep for 1hour")
+                time.sleep(3600)
 
-            for weibo in weibos:
-                cmt_fetched = fetch_comments(weibo, min_time=weibo.last_update_cmt_repost)
-                repost_fetched = fetch_reposts(weibo, min_time=weibo.last_update_cmt_repost)
-                weibo.last_update_cmt_repost = datetime.now()
-                weibo.save()
 
         end = time.time()
         logging.info('crawl comments and resposts one round time: %d seconds' % int(end-start))

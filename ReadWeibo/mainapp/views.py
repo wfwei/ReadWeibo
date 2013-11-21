@@ -4,6 +4,7 @@
 from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpResponseRedirect
+from ipware.ip import get_ip_address_from_request
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -63,7 +64,9 @@ def show_weibos(request, original=True, category_id=0, show_predict=False):
         logging.warn('No category found')
         return HttpResponse('No category found for id:%s' % category_id)
 
-    logging.info('current login user: %s, show %s' % (request.user, category))
+    ip = get_ip_address_from_request(request)
+
+    logging.info('current login user: %s, show %s, ip:%s' % (request.user, category, ip))
 
     template_var = {}
     if show_predict:

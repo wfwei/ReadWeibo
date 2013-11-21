@@ -29,9 +29,9 @@ logging.info("running %s" % ' '.join(sys.argv))
 WEIBO_API = {
         'app_key'              : u'3482624382',
         'app_secret'           : u'af44e0e7c3a7a55760d437cea207dd22',
-        'site_url'             : u'http://115.28.165.49',
-        'callback_url'         : u'http://115.28.165.49/weibo_callback',
-        'callback_rm_url'      : u'http://115.28.165.49/weibo_callback_rm'}
+        'site_url'             : u'http://www.underfitting.com/',
+        'callback_url'         : u'http://www.underfitting.com/weibo_callback',
+        'callback_rm_url'      : u'http://www.underfitting.com/weibo_callback_rm'}
 
 if __name__=='__main__':
 	logging.warn('a warn message')

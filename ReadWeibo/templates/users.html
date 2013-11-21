@@ -11,7 +11,7 @@
             
 {% block main %}
 
-<div id="container" class="js-masonry" data-masonry-options='{ "columnWidth": 100, "itemSelector": ".item" }'>
+<div id="container">
     {% for cur_user in category_users %} 
         <div class="item">
             {% include "user-card.html" %}
