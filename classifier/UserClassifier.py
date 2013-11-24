@@ -104,6 +104,7 @@ class UserClassifer():
         pass
 
 if __name__ == '__main__':
+
     classifier = UserClassifer(category_id=1)
 
     #classifier.label_by_desc(reset_all=True)
