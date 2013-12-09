@@ -6,6 +6,9 @@ from ReadWeibo.account.models import Account
 from main import Config
 import DataUtil as du
 
+from scipy.sparse import *
+from scipy import *
+
 import numpy as np
 import logging
 import operator
@@ -30,7 +33,7 @@ class ManifoldRank:
 
         # make adj matrix
         n = len(graph)
-        W = np.zeros((n, n))
+        W = csr_matrix((n, n))
         y = np.zeros((n, 1))
 
         label_set = set()
@@ -38,10 +41,10 @@ class ManifoldRank:
 
             nod0 = graph.node[edge[0]]
             nod1 = graph.node[edge[1]]
-            W[nod0['id']][nod1['id']] = 1
-            W[nod1['id']][nod0['id']] = 1
+            W[nod0['id'],nod1['id']] = 1
+            W[nod1['id'],nod0['id']] = 1
 
-            if len(label_set)<5:
+            if len(label_set)<20:
                 if 'category' in nod0 and nod0['category']==1 and nod0['tp']=='weibo':
                     y[nod0['id']] = 1
                     label_set.add(nod0['id'])
@@ -55,8 +58,14 @@ class ManifoldRank:
 
         f = np.zeros((self.N, 1))
         W, y = self._adj_mat(self.graph)
-        D = np.diag(np.sum(W, axis=1)**(-0.5))
-        S = np.dot(np.dot(D, W), D)
+
+        D = csr_matrix((self.N, self.N))
+        _sum = W.sum(1)
+        for _i in range(self.N):
+            if _sum[_i,0] != 0:
+                D[_i, _i] = _sum[_i,0]**(-0.5)
+
+        S = D.dot(W).dot(D)
 
         for _iter in range(self.max_iter):
             print 'iter : %d' % _iter
@@ -85,10 +94,10 @@ if __name__ == '__main__':
             else:
                 _wb = Weibo.objects.get(w_id=key)
                 key = u'%s\t%s' % (_wb.real_category, _wb.text[:20])
+                logging.info(u'%.6f\t%s' % (weight, key))
+                cnt -= 1
         else:
             pass # word
-            logging.info(u'%.6f\t%s' % (weight, key))
-            cnt -= 1
 
         if cnt<0:
             break

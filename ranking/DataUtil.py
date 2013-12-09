@@ -53,9 +53,11 @@ def gen_graph(save_path, max_cnt=-1):
                 G.add_node(user.w_uid, category=user.real_category, tp=u'user')
                 G.add_edge(wb.w_id, user.w_uid, weight=1.0)
                 logging.debug('Add <%s, %s>' % (wb, user))
-
+            logging.info(w_text)
             w_text = re.sub("@[^\s@:]+:", "", w_text)
+            logging.info(w_text)
             for w in pseg.cut(w_text.lower()):
+                logging.info("%s \t %s" % (w.word, w.flag))
                 if len(w.word)>1 and (u'n' in w.flag or u'x' in w.flag):
                     G.add_node((w.word), tp=u'word')
                     G.add_edge((w.word), wb.w_id, weight=1.0)
@@ -83,8 +85,8 @@ def load_graph(load_path, encoding='UTF-8'):
     return G
 
 if __name__ == '__main__':
-    _path = u"graph-1000.yaml";
-    gen_graph(save_path=_path, max_cnt=1000)
+    _path = u"graph-10.yaml";
+    gen_graph(save_path=_path, max_cnt=10)
     G = load_graph(load_path=_path,)
     for key, nod in G.nodes(data=True):
         print key, nod
