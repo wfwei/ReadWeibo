@@ -33,7 +33,7 @@ class ManifoldRank:
 
         # make adj matrix
         n = len(graph)
-        W = csr_matrix((n, n))
+        W = lil_matrix((n, n))
         y = np.zeros((n, 1))
 
         label_set = set()
@@ -59,7 +59,7 @@ class ManifoldRank:
         f = np.zeros((self.N, 1))
         W, y = self._adj_mat(self.graph)
 
-        D = csr_matrix((self.N, self.N))
+        D = lil_matrix((self.N, self.N))
         _sum = W.sum(1)
         for _i in range(self.N):
             if _sum[_i,0] != 0:
@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
     sorted_r = sorted(mr.ranks.iteritems(), key=operator.itemgetter(1), reverse=True)
 
-    cnt = 100
+    cnt = 100000000
     for key, weight in sorted_r:
         if not isinstance(key, unicode):
             if key<10000000000:
@@ -94,11 +94,11 @@ if __name__ == '__main__':
             else:
                 _wb = Weibo.objects.get(w_id=key)
                 key = u'%s\t%s' % (_wb.real_category, _wb.text[:20])
-                logging.info(u'%.6f\t%s' % (weight, key))
-                cnt -= 1
         else:
             pass # word
 
+        logging.info(u'%.6f\t%s' % (weight, key))
+        cnt -= 1
         if cnt<0:
             break
         else:

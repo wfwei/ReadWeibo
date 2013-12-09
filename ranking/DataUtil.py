@@ -7,8 +7,7 @@ from ReadWeibo.account.models import Account
 from main import Config
 
 import networkx as nx
-import logging
-import re
+import sys, re, logging
 
 def gen_graph(save_path, max_cnt=-1):
 
@@ -18,7 +17,7 @@ def gen_graph(save_path, max_cnt=-1):
 
     G = nx.Graph()
     wb_idx = 0
-    wb_cnt = Weibo.objects.exclude(real_category=0).filter(retweeted_status__exact=None).count()
+    wb_cnt = Weibo.objects.filter(retweeted_status__exact=None).count()
     if max_cnt>0 and wb_cnt>max_cnt:
         wb_cnt = max_cnt
     page_size = min(100, wb_cnt)
@@ -28,7 +27,7 @@ def gen_graph(save_path, max_cnt=-1):
         logging.info(u'**********Collected %d of %d weibos, with %d nodes, %d edges***********' %
                 (wb_idx, wb_cnt, G.number_of_nodes(), G.number_of_edges()))
 
-        wb_list = Weibo.objects.exclude(real_category=0).filter(retweeted_status__exact=None)[wb_idx:wb_idx+page_size]
+        wb_list = Weibo.objects.filter(retweeted_status__exact=None).order_by('created_at')[wb_idx:wb_idx+page_size]
         wb_idx += len(wb_list)
 
         for wb in wb_list:
@@ -53,11 +52,8 @@ def gen_graph(save_path, max_cnt=-1):
                 G.add_node(user.w_uid, category=user.real_category, tp=u'user')
                 G.add_edge(wb.w_id, user.w_uid, weight=1.0)
                 logging.debug('Add <%s, %s>' % (wb, user))
-            logging.info(w_text)
-            w_text = re.sub("@[^\s@:]+:", "", w_text)
-            logging.info(w_text)
+            w_text = re.sub("@[^\s@:]+", "", w_text)
             for w in pseg.cut(w_text.lower()):
-                logging.info("%s \t %s" % (w.word, w.flag))
                 if len(w.word)>1 and (u'n' in w.flag or u'x' in w.flag):
                     G.add_node((w.word), tp=u'word')
                     G.add_edge((w.word), wb.w_id, weight=1.0)
@@ -85,9 +81,9 @@ def load_graph(load_path, encoding='UTF-8'):
     return G
 
 if __name__ == '__main__':
-    _path = u"graph-10.yaml";
-    gen_graph(save_path=_path, max_cnt=10)
-    G = load_graph(load_path=_path,)
-    for key, nod in G.nodes(data=True):
-        print key, nod
-        break
+    _path = u"graph-10000.yaml";
+    gen_graph(save_path=_path, max_cnt=10000)
+    #G = load_graph(load_path=_path,)
+    pass
+
+
