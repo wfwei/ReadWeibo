@@ -27,7 +27,7 @@ def gen_graph(save_path, max_cnt=-1):
         logging.info(u'**********Collected %d of %d weibos, with %d nodes, %d edges***********' %
                 (wb_idx, wb_cnt, G.number_of_nodes(), G.number_of_edges()))
 
-        wb_list = Weibo.objects.filter(retweeted_status__exact=None).order_by('created_at')[wb_idx:wb_idx+page_size]
+        wb_list = Weibo.objects.filter(retweeted_status__exact=None).order_by('-created_at')[wb_idx:wb_idx+page_size]
         wb_idx += len(wb_list)
 
         for wb in wb_list:
@@ -81,8 +81,8 @@ def load_graph(load_path, encoding='UTF-8'):
     return G
 
 if __name__ == '__main__':
-    _path = u"graph-10000.yaml";
-    gen_graph(save_path=_path, max_cnt=10000)
+    _path = u"graph-100-new.yaml";
+    gen_graph(save_path=_path, max_cnt=100)
     #G = load_graph(load_path=_path,)
     pass
 
