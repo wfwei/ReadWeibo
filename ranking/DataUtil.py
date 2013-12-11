@@ -81,8 +81,8 @@ def load_graph(load_path, encoding='UTF-8'):
     return G
 
 if __name__ == '__main__':
-    _path = u"graph-100-new.yaml";
-    gen_graph(save_path=_path, max_cnt=100)
+    _path = u"graph-500-new.yaml";
+    gen_graph(save_path=_path, max_cnt=500)
     #G = load_graph(load_path=_path,)
     pass
 

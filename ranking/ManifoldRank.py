@@ -110,9 +110,13 @@ if __name__ == '__main__':
             if key<10000000000:
                 _acc = Account.objects.get(w_uid=key)
                 key = u'%s\t%s' % (_acc.real_category, _acc)
+                _acc.relevance = weight
+                _acc.save()
             else:
                 _wb = Weibo.objects.get(w_id=key)
-                key = u'%s\t%s' % (_wb.real_category, _wb.text[:25])
+                _wb.relevance = weight
+                _wb.save()
+                key = u'%s\t%s:%s' % (_wb.real_category, _wb, _wb.text[:25])
                 cnt -= 1
         else:
             pass # word

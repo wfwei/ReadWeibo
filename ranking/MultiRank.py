@@ -36,11 +36,11 @@ class MultiRank:
                     if self.ranks[nei_key] is not None:
                         _type = self.graph.node[nei_key]['tp']
                         if _type == 'weibo':
-                            _w = 2.0
+                            _w = 1.0
                         elif _type == 'user':
-                            _w = 0.0001
+                            _w = 1.0001
                         else:
-                            _w = 0.0001
+                            _w = 1.0001
                         outlinks = len(self.graph.neighbors(nei_key))
                         rank_sum += (_w / float(outlinks)) * self.ranks[nei_key]
 
