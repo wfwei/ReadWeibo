@@ -8,7 +8,9 @@ Created on 2013-10-8
 
 from ReadWeibo.account.models import Account
 from ReadWeibo.mainapp.models import Category, Weibo, Comment
-from crawler import UserFetcher, TopicCrawler
+
+from main import Config
+from itertools import chain
 
 import sys
 import logging
@@ -90,7 +92,8 @@ class WeiboClassifer():
         '''
 
         logging.info('Start labeling weibos by users related to it')
-        page_id=0; page_size = 1000; over = False; cnt = 0
+        page_id=0; page_size = 1000; over = False;
+        cnt0=0; cnt1=0
 
         while not over:
 
@@ -115,9 +118,9 @@ class WeiboClassifer():
 
                 retweets = weibo.retweet_status.all()
                 comments = weibo.comments.all()
-
+                logging.info("%d retweets, %d comments" % (len(retweets), len(comments)))
                 pos_cnt = 0; neg_cnt = 0
-                for rt in (retweets+comments):
+                for rt in list(chain(retweets, comments)):
                     if rt.owner.predict_category == self.category_id:
                         pos_cnt += 1
                     else:
@@ -126,15 +129,18 @@ class WeiboClassifer():
                 logging.info("%d positive users, %d negtive users" % (pos_cnt, neg_cnt))
 
                 if pos_cnt>threshold:
-                    logging.info("predict it as postive")
+                    cnt1+=1
+                    logging.info("predict it as postive:%s" % weibo.text)
+                    logging.info("pos/neg : %d/%d" % (cnt1, cnt0))
                     weibo.predict_category = self.category_id
                 else:
-                    logging.info("predict it as negtive")
-                    weibo.predict_category = Category.NO_CATEGORY # reset category
+                    cnt0+=1
+                    logging.debug("predict it as negtive")
+                    weibo.predict_category = Category.NO_CATEGORY# reset category
 
                 weibo.save()
 
-        logging.info('Labeled %d new weibo in %s' % (cnt, self.category))
+        logging.info('Labeled %d new weibo in %s' % ((cnt0+cnt1), self.category))
 
 
 
@@ -142,9 +148,8 @@ class WeiboClassifer():
         pass
 
 if __name__ == '__main__':
-    print Account.objects.count()
-    print Category.NO_CATEGORY
     classifier = WeiboClassifer(category_id=1)
-    classifier.label_by_user()
+    #classifier.label_by_user()
+    classifier.label_by_content()
     pass
 
