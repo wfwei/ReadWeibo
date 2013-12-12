@@ -32,6 +32,17 @@ wclient = weibo.APIClient(app_key = Config.WEIBO_API['app_key'],
 
 all_categories = Category.objects.exclude(category_id=0)
 
+def trending(request, max_count=200):
+
+    category_users = Account.objects.filter(relevance__gt=0).order_by("-relevance")[:max_count]
+    template_var = {}
+    template_var['category_users'] = category_users
+
+    template_var['messages'] = 'dynamic active users in machine learning'
+
+    return render_to_response("users.html", template_var,
+                              context_instance=RequestContext(request))
+
 def show_users_predict(request, category_id=0, show_predict=True):
     return show_users(request, category_id, show_predict)
 

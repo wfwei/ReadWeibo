@@ -8,17 +8,19 @@ admin.autodiscover()
 urlpatterns = patterns('',
 
     #Home, show popular
-    url(r'^$', RedirectView.as_view(url='/weibo/category/1')),
+    url(r'^$', RedirectView.as_view(url='/weibo/trending')),
 
     #Weibo
-    url(r'^weibo$', 'ReadWeibo.mainapp.views.show_weibos', name='weibos'),
+    url(r'^weibo$', RedirectView.as_view(url='/weibo/trending')),
+    url(r'^weibo/trending$', 'ReadWeibo.mainapp.views.trending', name='weibos'),
     url(r'^weibo/category/(?P<category_id>\d+)$', 'ReadWeibo.mainapp.views.show_weibos', name='weibo_category_view'),
     url(r'^weibo/category_predict/(?P<category_id>\d+)$', 'ReadWeibo.mainapp.views.show_weibos_predict', name='weibo_category_view'),
     url(r'^set_weibo_category/$', 'ReadWeibo.mainapp.views.set_weibo_category', name='set_weibo_category'),
     url(r'weibo/label', 'ReadWeibo.mainapp.views.show_weibo_for_labeling', name='show_weibo_for_labeling'),
 
     #User
-    url(r'^user$', 'ReadWeibo.account.views.show_users', name='users'),
+    url(r'^user$', RedirectView.as_view(url='/user/trending')),
+    url(r'^user/trending$', 'ReadWeibo.account.views.trending', name='users'),
     url(r'^user/category/(?P<category_id>\d+)$', 'ReadWeibo.account.views.show_users', name='user_category_view'),
     url(r'^user/category_predict/(?P<category_id>\d+)$', 'ReadWeibo.account.views.show_users_predict', name='user_category_view'),
     url(r'^set_user_category/$', 'ReadWeibo.account.views.set_user_category', name='set_user_category'),

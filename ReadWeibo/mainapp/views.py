@@ -37,6 +37,21 @@ all_categories = Category.objects.exclude(category_id=0)
 def home(request, category_id=1):
     return show_weibo_for_labeling(request)
 
+def trending(request):
+
+    logging.info('trending view, current login user: %s' % request.user)
+
+    weibo_list = Weibo.objects.filter(relevance__gt=0).order_by("-relevance")[:60]
+
+    template_var = {}
+    template_var['weibo_list'] = weibo_list
+    template_var['all_categories'] = all_categories
+    template_var['authorize_url'] = wclient.get_authorize_url()
+
+    return render_to_response("weibos.html", template_var,
+                              context_instance=RequestContext(request))
+
+
 def show_weibo_for_labeling(request):
     ''' show statuses for labeling '''
 
