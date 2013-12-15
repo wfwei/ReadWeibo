@@ -1,12 +1,41 @@
 # !/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import matplotlib.pyplot as plt
 from scipy.sparse import *
 from scipy import *
 import networkx as nx
 import numpy as np
 import sys, os
 
+
+G=nx.Graph()
+G.add_weighted_edges_from([
+    (1,2,.5), (1,4,.75), (1,5,.5),
+    (2,3,.5), (2,6,.75), (2,5,.5),
+    (3,4,.5), (3,6,.75), (3,7,.5),
+    (4,5,.5), (4,7,.75), (1,5,.5),
+    ])
+#nx.draw(G)
+#plt.show()
+
+nod=0; inc=0; outc=0
+for i in range(6):
+    nod += 1
+    nod = i+1
+    for nei in G[nod]:
+        if u'visited' in G[nod][nei]:
+            outc -= 1
+            inc += 1
+        else:
+            outc += 1
+            G[nod][nei]['visited'] = True
+
+    print u'current node:%s\t status<%s/%s>' % (nod, inc, outc)
+
+
+
+sys.exit(0)
 
 mt = [[0.0,2.0,3.0,0.0],
       [2.0,0.0,1.0,0.0],

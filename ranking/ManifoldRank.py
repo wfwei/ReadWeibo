@@ -74,6 +74,43 @@ class ManifoldRank:
         for key, node in self.graph.nodes(data=True):
             self.ranks[key] = f[node['id']]
 
+    def classify(self, update=False):
+
+        sorted_r = sorted(mr.ranks.iteritems(), key=operator.itemgetter(1), reverse=True)
+
+        cnt = 0
+        inner_edges = 0; outer_edges = 0
+        for key, weight in sorted_r:
+
+            for nei in G[key]:
+                if u'visited' in G[key][nei]:
+                    outer_edges -= 1
+                    inner_edges += 1
+                else:
+                    outer_edges += 1
+                    G[key][nei]['visited'] = True
+
+
+            if not isinstance(key, unicode):
+                if key<10000000000:
+                    _acc = Account.objects.get(w_uid=key)
+                    key = u'%s\t%s' % (_acc.real_category, _acc)
+                    if update:
+                        _acc.relevance = weight
+                        _acc.save()
+                else:
+                    _wb = Weibo.objects.get(w_id=key)
+                    if update:
+                        _wb.relevance = weight
+                        _wb.save()
+                    key = u'%s\t%s:%s' % (_wb.real_category, _wb, _wb.text[:25])
+            else:
+                pass # word
+
+            cnt += 1
+            logging.info(u'%.6f\t%s' % (weight, key))
+            logging.info(u'%d\t%d\t%d' % (cnt, inner_edges, outer_edges))
+
 if __name__ == '__main__':
     if len(sys.argv)<2:
         print '''Expected input format: %s graph [-t topic] [-m max_iter]
@@ -101,28 +138,5 @@ if __name__ == '__main__':
     G = du.load_graph(load_path)
     mr = ManifoldRank(G, topic_words=topic_words, max_iter=max_iter)
     mr.rank()
+    mr.classify()
 
-    sorted_r = sorted(mr.ranks.iteritems(), key=operator.itemgetter(1), reverse=True)
-
-    cnt = 100
-    for key, weight in sorted_r:
-        if not isinstance(key, unicode):
-            if key<10000000000:
-                _acc = Account.objects.get(w_uid=key)
-                key = u'%s\t%s' % (_acc.real_category, _acc)
-                _acc.relevance = weight
-                _acc.save()
-            else:
-                _wb = Weibo.objects.get(w_id=key)
-                _wb.relevance = weight
-                _wb.save()
-                key = u'%s\t%s:%s' % (_wb.real_category, _wb, _wb.text[:25])
-                cnt -= 1
-        else:
-            pass # word
-
-        logging.info(u'%.6f\t%s' % (weight, key))
-        if cnt<0:
-            break
-        else:
-            pass

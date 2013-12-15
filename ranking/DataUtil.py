@@ -9,18 +9,18 @@ from main import Config
 import networkx as nx
 import sys, re, logging
 
-def gen_graph(save_path, max_cnt=-1):
+def gen_graph(save_path, start_idx=0, max_cnt=-1):
 
     import jieba
     import jieba.posseg as pseg
     jieba.load_userdict(u"/etc/jieba/jieba.dic")
 
     G = nx.Graph()
-    wb_idx = 0
     wb_cnt = Weibo.objects.filter(retweeted_status__exact=None).count()
-    if max_cnt>0 and wb_cnt>max_cnt:
-        wb_cnt = max_cnt
+    if max_cnt>0 and wb_cnt>max_cnt+start_idx:
+        wb_cnt = max_cnt+start_idx
     page_size = min(100, wb_cnt)
+    wb_idx = start_idx
 
     while wb_idx<wb_cnt:
 
@@ -81,9 +81,11 @@ def load_graph(load_path, encoding='UTF-8'):
     return G
 
 if __name__ == '__main__':
-    _path = u"graph-500-new.yaml";
-    gen_graph(save_path=_path, max_cnt=500)
-    #G = load_graph(load_path=_path,)
+    for i in range(8):
+        _path = u"test_data/graph-500-%d.yaml" % (i+3);
+        _start_idx=100*(i+4)
+        gen_graph(save_path=_path, max_cnt=500, start_idx=_start_idx)
+        #G = load_graph(load_path=_path,)
     pass
 
 
