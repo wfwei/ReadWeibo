@@ -8,8 +8,10 @@ Created on 2013-11-3
 
 from ReadWeibo.mainapp.models import Weibo, Category
 from ReadWeibo.account.models import Account
-from libweibo import weibo
 from main import Config
+from ranking import DataUtil as du
+from ranking.ManifoldRank import ManifoldRank
+from libweibo import weibo
 
 from time import sleep
 import traceback
@@ -24,9 +26,17 @@ wclient = weibo.APIClient(app_key = Config.WEIBO_API['app_key'],
                      redirect_uri = Config.WEIBO_API['callback_url'])
 wclient.set_access_token(master.oauth.access_token, master.oauth.expires_in)
 
+def rank():
+    G = du.gen_graph(save_path=None, max_cnt=500)
+    mr = ManifoldRank(G, topic_words=topic_words, max_iter=max_iter)
+    mr.rank()
+    mr.classify(update=True)
+
+
+
 def follow_others():
 
-    users_to_follow = Account.objects.filter(real_category=target_category.category_id)
+    users_to_follow = Account.objects.order_by("-relevance")[:5]
 
     logging.info(u'Start following others(%d)' % len(users_to_follow))
 
@@ -48,4 +58,5 @@ def follow_others():
             sleep(120) # every two minutes
 
 if __name__=='__main__':
-    follow_others()
+    rank()
+    #follow_others()

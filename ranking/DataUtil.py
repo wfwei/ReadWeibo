@@ -9,7 +9,7 @@ from main import Config
 import networkx as nx
 import sys, re, logging
 
-def gen_graph(save_path, start_idx=0, max_cnt=-1):
+def gen_graph(save_path, start_idx=0, max_cnt=1000):
 
     import jieba
     import jieba.posseg as pseg
@@ -61,7 +61,9 @@ def gen_graph(save_path, start_idx=0, max_cnt=-1):
 
     #nx.write_pajek(G, save_path, encoding='UTF-8')
     #nx.write_graphml(G, save_path, encoding='UTF-8', prettyprint=True)
-    nx.write_yaml(G, save_path, encoding='UTF-8')
+    if save_path:
+        nx.write_yaml(G, save_path, encoding='UTF-8')
+    return G
 
 def load_graph(load_path, encoding='UTF-8'):
     logging.info('Loading graph from file:%s' % load_path)
