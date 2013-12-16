@@ -28,18 +28,10 @@ _request_interval = 4
 def crawl_home_timeline(w_uid, sleep_interval=3600):
     ''' crawl user timeline '''
 
-    try:
-        user = Account.objects.get(w_uid=w_uid)
-    except Exception:
-        logging.warn('User not found:%s' % user)
-        return
-    else:
-        logging.info('Start crawling %s\'s home timeline ' % user)
-
     while True:
 
         start = time.time()
-        fetch_home_timeline(user)
+        fetch_home_timeline(w_uid)
         end = time.time()
 
         sleep_len = sleep_interval - (end-start)
@@ -50,7 +42,16 @@ def crawl_home_timeline(w_uid, sleep_interval=3600):
         else:
             logging.info('No need for sleep')
 
-def fetch_home_timeline(user, max_count=5000):
+def fetch_home_timeline(w_uid, max_count=5000):
+
+    try:
+        user = Account.objects.get(w_uid=w_uid)
+    except Exception:
+        logging.warn('User not found:%s' % user)
+        return
+    else:
+        logging.info('Start fetching %s\'s home timeline ' % user)
+
 
     if not user.oauth or user.oauth.is_expired():
         logging.warn('OAuth(%s) Expired for %s' % (user.oauth, user))
@@ -103,4 +104,5 @@ def fetch_home_timeline(user, max_count=5000):
 
 if __name__ == '__main__':
     w_uid = 3887027625 # 1698863684
-    crawl_home_timeline(w_uid)
+    fetch_home_timeline(w_uid)
+    #crawl_home_timeline(w_uid)

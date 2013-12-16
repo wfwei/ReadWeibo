@@ -28,15 +28,13 @@ wclient.set_access_token(master.oauth.access_token, master.oauth.expires_in)
 
 def rank():
     G = du.gen_graph(save_path=None, max_cnt=500)
-    mr = ManifoldRank(G, topic_words=topic_words, max_iter=max_iter)
+    mr = ManifoldRank(G)
     mr.rank()
     mr.classify(update=True)
 
-
-
 def follow_others():
 
-    users_to_follow = Account.objects.order_by("-relevance")[:5]
+    users_to_follow = Account.objects.order_by("-relevance")[:10]
 
     logging.info(u'Start following others(%d)' % len(users_to_follow))
 
@@ -59,4 +57,4 @@ def follow_others():
 
 if __name__=='__main__':
     rank()
-    #follow_others()
+    follow_others()

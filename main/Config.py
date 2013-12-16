@@ -15,7 +15,9 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO,
 				format='%(asctime)s : %(name)-8s : %(levelname)s : %(message)s',
 				datefmt='%Y-%m-%d %H:%M:%S',
-				filename= '/var/log/readweibo/%s-%s.log' % (sys.argv[0].split()[0], datetime.now()),
+                filename= '/var/log/readweibo/%s-%s.log' % (
+                    sys.argv[0].split()[0].split('/')[-1],
+                    datetime.now().strftime("%Y-%m-%d")),
 				filemode='a+')
 
 formatter = logging.Formatter('%(asctime)s : %(name)-8s: %(levelname)-8s %(message)s',
