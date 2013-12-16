@@ -76,19 +76,19 @@ class ManifoldRank:
 
     def classify(self, update=False):
 
-        sorted_r = sorted(mr.ranks.iteritems(), key=operator.itemgetter(1), reverse=True)
+        sorted_r = sorted(self.ranks.iteritems(), key=operator.itemgetter(1), reverse=True)
 
         cnt = 0
         inner_edges = 0; outer_edges = 0
         for key, weight in sorted_r:
 
-            for nei in G[key]:
-                if u'visited' in G[key][nei]:
+            for nei in self.graph[key]:
+                if u'visited' in self.graph[key][nei]:
                     outer_edges -= 1
                     inner_edges += 1
                 else:
                     outer_edges += 1
-                    G[key][nei]['visited'] = True
+                    self.graph[key][nei]['visited'] = True
 
 
             if not isinstance(key, unicode):
