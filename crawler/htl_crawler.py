@@ -104,5 +104,5 @@ def fetch_home_timeline(w_uid, max_count=5000):
 
 if __name__ == '__main__':
     w_uid = 3887027625 # 1698863684
-    fetch_home_timeline(w_uid)
-    #crawl_home_timeline(w_uid)
+    #fetch_home_timeline(w_uid)
+    crawl_home_timeline(w_uid)

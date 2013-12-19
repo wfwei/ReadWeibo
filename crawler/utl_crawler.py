@@ -7,30 +7,26 @@ Weibo User Timeline Crawler
 Created on Aug 29, 2013
 @author: plex
 '''
-from djangodb.WeiboDao import WeiboDao
-from djangodb.CommentDao import CommentDao
-from main import Config
-from libweibo import weibo
-
-_api = Config.WEIBO_API_GGZZ
-wclient = weibo.APIClient(app_key = _api['app_key'],
-                       app_secret = _api['app_secret'],
-                     redirect_uri = _api['callback_url'])
-wclient.set_access_token(
-        _api['default_access_token'],
-        _api['default_token_expire'])
-
 from ReadWeibo.account.models import Account
 from ReadWeibo.mainapp.models import Weibo
+from djangodb.CommentDao import CommentDao
+from djangodb.WeiboDao import WeiboDao
+from django.db.models import Count
+from libweibo import weibo
+from main import Config
 from datetime import datetime, timedelta
 from time import sleep
 import traceback
 import logging
 
-_request_interval = 4.5 # secodes
+wclient = weibo.APIClient(app_key = '3826768764',
+                       app_secret = '7eb7e1c82280f31db8db14cbd0895505',
+                       redirect_uri = 'http://42.121.117.9/atRec/callback.jsp')
+wclient.set_access_token('2.00b6R5mBq3jyKE94bbf64dc40Z6k1J', '1394823602435')
 
+_request_interval = 1.5 # secodes
 
-def fetch_user_timeline(w_uid, append=True, max_count=1000, max_interval=100):
+def fetch_user_timeline(w_uid, append=True, max_count=1000):
     '''
     获取当前用户所发布的微博，需要授权
     '''
@@ -40,11 +36,11 @@ def fetch_user_timeline(w_uid, append=True, max_count=1000, max_interval=100):
         logging.error('no user found for id:%s' % w_uid)
         return
 
-    if user.oauth and not user.oauth.is_expired():
-        wclient.set_access_token(user.oauth.access_token, user.oauth.expires_in)
-    else:
-        logging.warn('OAuth(%s) Expired for %s' % (user.oauth, user))
-        return
+    #if user.oauth and not user.oauth.is_expired():
+    #    wclient.set_access_token(user.oauth.access_token, user.oauth.expires_in)
+    #else:
+    #    logging.warn('OAuth(%s) Expired for %s' % (user.oauth, user))
+    #    return
 
     if not user.need_update_utl():
         logging.info('No need to update user time line for %s (last update time: %s)'
@@ -90,4 +86,13 @@ def fetch_user_timeline(w_uid, append=True, max_count=1000, max_interval=100):
     else:
         logging.warn('No new statuses found in %s time line' % user)
 
-
+if __name__ == '__main__':
+    for item in Weibo.objects.values('owner').annotate(cnt=Count('owner')):
+        if item['cnt']>20:
+            u = Account.objects.get(id=item['owner'])
+            logging.info('fetching %s' % u)
+            try:
+                fetch_user_timeline(u.w_uid, append=True, max_count=1000)
+            except Exception, e:
+                logging.exception(e)
+    pass
