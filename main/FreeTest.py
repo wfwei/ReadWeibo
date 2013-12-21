@@ -11,7 +11,7 @@ words = u'数据挖掘dataminingdm机器学习machinelearingml自然语言处理
     natual language process nlp搜索searchrank数据分析datananlysis\
     机器翻译个性化推荐技术推荐系统recommendsystem大数据bigdata信息检索计算机视觉'
 
-def jieba_cut():
+def jieba_cut(words=words):
     import jieba
 
     print 'before adding dict:'
@@ -20,7 +20,7 @@ def jieba_cut():
     jieba.load_userdict("/etc/jieba/jieba.dic")
     print u'/'.join(jieba.cut(words))
 
-def jieba_posseg():
+def jieba_posseg(words=words):
 
     import jieba
     import jieba.posseg as pseg
@@ -36,5 +36,5 @@ def jieba_posseg():
 if __name__ == '__main__':
     import sys
     print sys.argv[0]
-    jieba_posseg()
+    jieba_posseg("")
     pass
