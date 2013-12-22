@@ -56,5 +56,8 @@ def follow_others():
             sleep(120) # every two minutes
 
 if __name__=='__main__':
-    rank()
-    follow_others()
+    while True:
+        rank()
+        sleep(3636)
+
+    #follow_others()

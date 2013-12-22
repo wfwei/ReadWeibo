@@ -24,7 +24,7 @@ wclient = weibo.APIClient(app_key = '3826768764',
                        redirect_uri = 'http://42.121.117.9/atRec/callback.jsp')
 wclient.set_access_token('2.00b6R5mBq3jyKE94bbf64dc40Z6k1J', '1394823602435')
 
-_request_interval = 1.5 # secodes
+_request_interval = .5 # secodes
 
 def fetch_user_timeline(w_uid, append=True, max_count=1000):
     '''
@@ -42,13 +42,13 @@ def fetch_user_timeline(w_uid, append=True, max_count=1000):
     #    logging.warn('OAuth(%s) Expired for %s' % (user.oauth, user))
     #    return
 
-    if not user.need_update_utl():
-        logging.info('No need to update user time line for %s (last update time: %s)'
-                    % (user, user.last_update_utl))
-        return
+    #if not user.need_update_utl():
+    #    logging.info('No need to update user time line for %s (last update time: %s)'
+    #                % (user, user.last_update_utl))
+    #    return
 
     tot_fetched = 0; page_size = 100; page_id = 1; over = False
-    trim_user = 1 #返回值中user字段开关，0：返回完整user字段、1：user字段仅返回user_id，默认为0
+    trim_user = 0 #返回值中user字段开关，0：返回完整user字段、1：user字段仅返回user_id，默认为0
     while not over:
         result = wclient.get.statuses__user_timeline(uid=w_uid,
                                                     count=page_size,
@@ -62,10 +62,10 @@ def fetch_user_timeline(w_uid, append=True, max_count=1000):
         for status in result['statuses']:
             try:
                 weibo = WeiboDao.create_or_update(status)
-                logging.info('Fetched new status:%s' % weibo)
-                if weibo.created_at < user.last_update_utl:
-                    over = True
-                    break
+                logging.info(u'Fetched new status:%s\t%s' % (weibo, weibo.text[:20]))
+                #if weibo.created_at < user.last_update_utl:
+                #    over = True
+                #    break
             except Exception:
                 logging.warn('Fail to parse status: %s', status)
                 logging.warn(traceback.format_exc())
@@ -88,11 +88,11 @@ def fetch_user_timeline(w_uid, append=True, max_count=1000):
 
 if __name__ == '__main__':
     for item in Weibo.objects.values('owner').annotate(cnt=Count('owner')):
-        if item['cnt']>20:
+        if item['cnt']>50 and item['cnt']<301:
             u = Account.objects.get(id=item['owner'])
             logging.info('fetching %s' % u)
             try:
-                fetch_user_timeline(u.w_uid, append=True, max_count=1000)
+                fetch_user_timeline(u.w_uid, append=True, max_count=450)
             except Exception, e:
                 logging.exception(e)
     pass
