@@ -34,6 +34,7 @@ class Account(models.Model):
 	predict_category = models.IntegerField(default=0)
 	real_category = models.IntegerField(default=0)
 	relevance = models.FloatField(default=0)
+	exp = models.IntegerField(default=0)
 
 	user = models.ForeignKey(auth_models.User, null=True, on_delete=models.CASCADE) #绑定系统用户，可选
 	oauth = models.ForeignKey("UserOauth2", null=True, on_delete=models.CASCADE)
