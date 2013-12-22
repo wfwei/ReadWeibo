@@ -45,6 +45,8 @@ class Weibo(models.Model):
     predict_category = models.IntegerField(default=0, blank=True)
     real_category  =  models.IntegerField(default=0, blank=True)
     relevance  =  models.FloatField(default=0, blank=True)
+    exp = models.IntegerField(default=0, blank=True)
+    keywords = models.TextField(blank=True)
 
     owner = models.ForeignKey(Account, related_name='ownweibo', blank=True, null=True, on_delete=models.SET_NULL) #owner
     watcher = models.ManyToManyField(Account, related_name='watchweibo', blank=True, null=True)
