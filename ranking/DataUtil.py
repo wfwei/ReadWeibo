@@ -54,7 +54,7 @@ def gen_graph(save_path, start_idx=0, max_cnt=1000):
                 logging.debug('Add <%s, %s>' % (wb, user))
             w_text = re.sub("@[^\s@:]+", "", w_text)
             for w in pseg.cut(w_text.lower()):
-                if len(w.word)>1 and (u'n' in w.flag or u'x' in w.flag):
+                if len(w.word)>1 and u'n' in w.flag:
                     G.add_node((w.word), tp=u'word')
                     G.add_edge((w.word), wb.w_id, weight=1.0)
                     logging.debug(u'Add <%s, %s>' % (wb, w.word))
