@@ -35,6 +35,11 @@ WEIBO_API = {
         'callback_url'         : u'http://www.underfitting.com/weibo_callback',
         'callback_rm_url'      : u'http://www.underfitting.com/weibo_callback_rm'}
 
+STOP_WORDS = frozenset([word.decode('utf-8') for word in open('/etc/jieba/stopwords.txt')])
+
+
+_ML_WORDS = u'数据挖掘-datamining-dm-机器学习-machinelearing-ml-自然语言处理-natuallanguageprocess-nlp-模式识别-patternrecognization-信息检索-informationretrieval-统计学习-statisticsstudy-CTR-人脸识别-facerecognization-模型优化-modeloptimization-社交网络-socialnetwork-搜索引擎-searchengine-rank-数据分析-dataanlysis-机器翻译-个性化推荐-推荐系统-recommendsystem-大数据-bigdata-计算机视觉-文本挖掘-textmining'
+
 if __name__=='__main__':
 	logging.warn('a warn message')
 	pass

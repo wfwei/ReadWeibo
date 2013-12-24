@@ -39,6 +39,12 @@ class TopicalWordRank:
 
         ntopics = self.ntopics
         graph = self.graph
+        q={}
+        for nod, info in graph.nodes(data=True):
+            weight = .0
+            if 'weight' in info:
+                weight = info['weight']
+            q[nod.decode('utf-8')] = np.array([weight]*ntopics)
 
         for _iter in range(self.max_iter):
             logging.info(u'TopicalWordRank iter : %s' % _iter)
@@ -49,12 +55,14 @@ class TopicalWordRank:
                     weight_sum = .0
                     for out in graph[nei]:
                         weight_sum += graph[nei][out]['weight']
+                    #TODO
                     if type(nei)==str:
                         nei = nei.decode('utf-8')
                     rank_sum += (weight / weight_sum) * self.ranks[nei]
+                #TODO
                 if type(key)==str:
                     key = key.decode('utf-8')
-                self.ranks[key] = lam*rank_sum + (1 - lam)*self.p[key]
+                self.ranks[key] = lam*rank_sum + (1 - lam)*(self.p[key]+q[key])
 
     def save(self, fpath, with_log=True):
         with open(fpath, 'w') as resf:
@@ -68,17 +76,17 @@ if __name__ == '__main__':
 
     fdir = sys.argv[1]
 
-    G = du.gen_data(graph_path=u'%s/graph.yaml' % fdir,
-                    lda_path=u'%s/lda.train' % fdir,
-                    user_lim=2, user_wb_lim=20)
-
     #G = du.gen_data(graph_path=u'%s/graph.yaml' % fdir,
     #                lda_path=u'%s/lda.train' % fdir,
-    #                user_lim=200, user_wb_lim=200)
+    #                user_lim=2, user_wb_lim=20)
+
+    G = du.gen_data(graph_path=u'%s/graph.yaml' % fdir,
+                    lda_path=u'%s/lda.train' % fdir,
+                    user_lim=200, user_wb_lim=200)
     #G = du.load_graph(u'%s/graph.yaml' % fdir)
     job = TopicalWordRank(G)
-    #job.gibbs_lda(fdir, ntopics=50, niters=1000, savestep=1000, twords=20)
-    job.gibbs_lda(fdir, ntopics=2, niters=10, savestep=10, twords=20)
+    job.gibbs_lda(fdir, ntopics=50, niters=1000, savestep=1000, twords=20)
+    #job.gibbs_lda(fdir, ntopics=2, niters=10, savestep=10, twords=20)
     job.rank()
     job.save(u'%s/result.txt' % fdir)
 

@@ -27,32 +27,30 @@ class WordExtract:
             if w.word in self.model:
                 wdmap[w.word] = sum(self.model[w.word])
         sorted_r = sorted(wdmap.iteritems(), key=operator.itemgetter(1), reverse=True)
-        return ' '.join([item[0] for item in sorted_r])
+        return ' '.join([item[0].encode('utf-8') for item in sorted_r])
 
     def test(self):
-        for item in Weibo.objects.values('owner').annotate(cnt=Count('owner')):
-            if item['cnt']<=450:
-                continue
-            user = Account.objects.get(id=item['owner'])
-            for wb in user.ownweibo.order_by("-created_at").all()[:5]:
+        for user in Account.objects.filter(exp=1):
+            for wb in user.ownweibo.order_by("-created_at").filter(retweeted_status__exact=None)[:2]:
+                text = re.sub("@[^\s@:]+", "", wb.text)
+                text = re.sub(u"http://t.cn[^ ]*", u"", text)
+                text = re.sub(u"\[[^ ]{1,3}\]", u"", text)
+                wb.keywords = self.extract(text)
+                wb.save()
                 logging.info(wb.text)
-                logging.info(self.extract(re.sub(u'@.*?[:\s]', '', wb.text)))
-                raw_input()
+                logging.info(wb.keywords)
 
 def tpr_test(fdir):
     model = du.load_tpr_model(u'%s/result.txt' % fdir)
     job = WordExtract(model)
     job.test()
 
-
 def lda_test(fdir, ntopics):
     model = du.load_lda_model(fdir, ntopics)
     job = WordExtract(model)
     job.test()
 
-
-
 if __name__ == '__main__':
     tpr_test(sys.argv[1])
-    lda_test(sys.argv[1], int(sys.argv[2]))
+    #lda_test(sys.argv[1], int(sys.argv[2]))
 

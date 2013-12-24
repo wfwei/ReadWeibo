@@ -14,42 +14,55 @@ import logging
 import operator
 import math, random, sys, csv
 
-_ML_WORDS = u'数据挖掘-datamining-dm-机器学习-machinelearing-ml-自然语言处理-natuallanguageprocess-nlp-模式识别-patternrecognization-信息检索-informationretrieval-统计学习-statisticsstudy-CTR-人脸识别-facerecognization-模型优化-modeloptimization-社交网络-socialnetwork-搜索引擎-searchengine-rank-数据分析-dataanlysis-机器翻译-个性化推荐-推荐系统-recommendsystem-大数据-bigdata-计算机视觉-文本挖掘-textmining'
 
 class ManifoldRank:
 
-    def __init__(self, graph, topic_words=_ML_WORDS, alpha=0.15, max_iter=40):
+    def __init__(self, graph, topic_words=Config._ML_WORDS, alpha=0.15, max_iter=40):
         self.max_iter = max_iter
         self.alpha = alpha
         self.graph = graph
-        self.N = len(graph)
         self.ranks = {}
         self.topic_words = set(topic_words.lower().split("-"))
 
     def _adj_mat(self, graph, topic_words):
 
         # label id to each node
-        st = 0
-        for key in graph.nodes():
-            graph.node[key]['id'] = st
-            st += 1
+        nid = 0
+        for key, info in graph.nodes(data=True):
+            if info['tp'] == 'weibo':
+                graph.node[key]['id'] = nid
+                nid += 1
 
         # make adj matrix
-        n = len(graph)
-        W = lil_matrix((n, n))
-        y = np.zeros((n, 1))
+        W = lil_matrix((nid, nid))
+        y = np.zeros((nid, 1))
 
-        for edge in graph.edges():
+        for key, info in graph.nodes(data=True):
+            if info['tp'] == 'weibo':
+                continue
 
-            nod0 = graph.node[edge[0]]
-            nod1 = graph.node[edge[1]]
-            W[nod0['id'],nod1['id']] = 1
-            W[nod1['id'],nod0['id']] = 1
+            if info['tp'] == 'word' and key in topic_words:
+                label = True
+                weight = 1.0
+            else:
+                label = False
+                weight = 0.5
 
-            if nod0['tp']=='word' and edge[0] in topic_words:
-                y[nod0['id']] = 1
-            if nod1['tp']=='word' and edge[1] in topic_words:
-                y[nod1['id']] = 1
+
+            neis = graph.neighbors(key)
+            for i in range(len(neis)):
+                for j in range(len(neis))[i+1:]:
+                    nod1 = graph.node[neis[i]]
+                    nod2 = graph.node[neis[j]]
+                    if nod1['tp']=='weibo' and nod2['tp']=='weibo':
+                        W[nod1['id'], nod2['id']] += weight
+                        W[nod2['id'], nod1['id']] += weight
+
+                        if label:
+                            y[nod1['id']] = 1.0
+                            y[nod2['id']] = 1.0
+
+        logging.info(u"labeled %d weibo" % y.sum())
 
         return W, y
 
@@ -58,63 +71,33 @@ class ManifoldRank:
         W, y = self._adj_mat(self.graph, self.topic_words)
         logging.info("make adjacent matrix over, and labeled %d words" % y.sum())
 
-        D = lil_matrix((self.N, self.N))
+        D = lil_matrix(W.shape)
         _sum = W.sum(1)
-        for _i in range(self.N):
+        for _i in range(D.shape[0]):
             if _sum[_i,0] != 0:
                 D[_i, _i] = _sum[_i,0]**(-0.5)
 
         S = D.dot(W).dot(D)
-        f = np.zeros((self.N, 1))
+        f = np.zeros(y.shape)
 
         for _iter in range(self.max_iter):
             logging.info('iter : %d' % _iter)
             f = self.alpha*S.dot(f) + (1-self.alpha)*y
 
-        for key, node in self.graph.nodes(data=True):
-            self.ranks[key] = f[node['id']]
+        for nod, info in self.graph.nodes(data=True):
+            if info['tp']=='weibo' and 'id' in info:
+                self.ranks[nod] = f[info['id']]
 
-    def classify(self, update=False):
-
+    def output(self):
         sorted_r = sorted(self.ranks.iteritems(), key=operator.itemgetter(1), reverse=True)
+        for w_id, weight in sorted_r:
+            wb = Weibo.objects.get(w_id=w_id)
+            logging.info("%s\t%s\t%s" % (wb.real_category, weight, wb.text[:30]))
 
-        cnt = 0
-        inner_edges = 0; outer_edges = 0
-        for key, weight in sorted_r:
-
-            for nei in self.graph[key]:
-                if u'visited' in self.graph[key][nei]:
-                    outer_edges -= 1
-                    inner_edges += 1
-                else:
-                    outer_edges += 1
-                    self.graph[key][nei]['visited'] = True
-
-
-            if not isinstance(key, unicode):
-                if key<10000000000:
-                    _acc = Account.objects.get(w_uid=key)
-                    key = u'%s\t%s' % (_acc.real_category, _acc)
-                    if update:
-                        _acc.relevance = weight
-                        _acc.save()
-                else:
-                    _wb = Weibo.objects.get(w_id=key)
-                    if update:
-                        _wb.relevance = weight
-                        _wb.save()
-                    key = u'%s\t%s:%s' % (_wb.real_category, _wb, _wb.text[:25])
-            else:
-                pass # word
-
-            cnt += 1
-            logging.info(u'%.6f\t%s' % (weight, key))
-            logging.info(u'%d\t%d\t%d' % (cnt, inner_edges, outer_edges))
 
 if __name__ == '__main__':
     if len(sys.argv)<2:
         print '''Expected input format: %s graph [-t topic] [-m max_iter]
-
                  graph: graph file path
                  -t: specify topic words
                  topic: topic words seperated by '-', default with ML words
@@ -124,7 +107,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     load_path = sys.argv[1]
-    topic_words=_ML_WORDS
+    topic_words=Config._ML_WORDS
     max_iter=20
 
     _id = 2
@@ -138,5 +121,5 @@ if __name__ == '__main__':
     G = du.load_graph(load_path)
     mr = ManifoldRank(G, topic_words=topic_words, max_iter=max_iter)
     mr.rank()
-    mr.classify()
+    mr.output()
 

@@ -10,14 +10,6 @@ import networkx as nx
 import numpy as np
 import sys, re, logging
 
-STOP_WORDS = frozenset(('a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'can',
-                        'for', 'from', 'have', 'if', 'in', 'is', 'it', 'may',
-                        'not', 'of', 'on', 'or', 'tbd', 'that', 'the', 'this',
-                        'to', 'us', 'we', 'when', 'will', 'with', 'yet','out',
-                        'you', 'your', 'cn', 'ok', 'com', 'via', 'but', 'has',
-                        'what', 'no', 'how', 'very', 'like', 'still', 'more',
-                        'now', u'转发',u'微博', u'回复', u'呵呵', u'偷笑',
-                        'http', 'he', 'so', 'the', 'all', 'well', '__'))
 
 def gen_data(graph_path, lda_path, user_lim=200, user_wb_lim=200):
 
@@ -38,11 +30,16 @@ def gen_data(graph_path, lda_path, user_lim=200, user_wb_lim=200):
             for wb in user.ownweibo.order_by("-created_at").all()[:user_wb_lim]:
                 #filter(retweeted_status__exact=None).all():
                 text = wb.text.lower()
+                #TODO
                 #if wb.retweeted_status:
-                #   text = w.retweeted_status.text.lower() + text
-                for word in re.findall("【.+?】|#.+?#|《.+?》|“.+?”|\".+?\"", text):
+                #   text = wb.retweeted_status.text.lower() + text
+
+                text = re.sub("@[^\s@:]+", "", text)
+                text = re.sub(u"http://t.cn[^ ]*", u"", text)
+                text = re.sub(u"\[[^ ]{1,3}\]", u"", text)
+                for word in re.findall(u"【.+?】|#.+?#|《.+?》|“.+?”|\".+?\"", text):
                     for w in pseg.cut(word):
-                        if len(w.word)<2 or w.word in STOP_WORDS or 'n' not in w.flag:
+                        if len(w.word)<2 or w.word in Config.STOP_WORDS or 'n' not in w.flag:
                             continue
                         wd = w.word.encode('utf-8')
                         if G.has_node(wd) and 'weight' in G.node[wd]:
@@ -52,7 +49,7 @@ def gen_data(graph_path, lda_path, user_lim=200, user_wb_lim=200):
 
                 wb_words = []
                 for w in pseg.cut(text):
-                    if len(w.word)>1 and 'n' in w.flag and w.word not in STOP_WORDS:
+                    if len(w.word)>1 and 'n' in w.flag and w.word not in Config.STOP_WORDS:
                         wb_words.append(w.word.encode('utf-8'))
                 if not wb_words:
                     continue
