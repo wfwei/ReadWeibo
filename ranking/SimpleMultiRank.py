@@ -73,6 +73,8 @@ class SimpleMultiRank:
         for key, node in self.graph.nodes(data=True):
             self.ranks[key] = f[node['id']]
 
+
+
     def classify(self, update=False):
 
         sorted_r = sorted(self.ranks.iteritems(), key=operator.itemgetter(1), reverse=True)
@@ -110,6 +112,22 @@ class SimpleMultiRank:
             logging.info(u'%.6f\t%s' % (weight, key))
             logging.info(u'%d\t%d\t%d' % (cnt, inner_edges, outer_edges))
 
+
+    def test(self, verbose=False):
+        sorted_r = sorted(self.ranks.iteritems(), key=operator.itemgetter(1), reverse=True)
+        found=0; tot=0; cost=.0
+        for w_id, weight in sorted_r:
+            if isinstance(w_id, unicode) or w_id<10000000000:
+                continue
+            wb = Weibo.objects.get(w_id=w_id)
+            tot += 1
+            if wb.real_category==1:
+                found += 1
+                cost += math.log(tot-found+1)
+            if verbose:
+                logging.info("%s\t%s\t%s" % (wb.real_category, weight, wb.text[:30]))
+        return cost
+
 if __name__ == '__main__':
     if len(sys.argv)<2:
         print '''Expected input format: %s graph [-t topic] [-m max_iter]
@@ -136,5 +154,7 @@ if __name__ == '__main__':
     G = du.load_graph(load_path)
     mr = SimpleMultiRank(G, topic_words=topic_words, max_iter=max_iter)
     mr.rank()
-    mr.classify()
+    cost = mr.test()
+    logging.info(cost)
+    #mr.classify()
 

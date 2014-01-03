@@ -45,10 +45,19 @@ class TimeBasedRank:
                 break
         logging.info("%s not found" % " ".join(missing))
 
-    def output(self):
+    def test(self, verbose=False):
         sorted_r = sorted(self.ranks.iteritems(), key=operator.itemgetter(1), reverse=True)
-        for item, weight in sorted_r:
-            logging.info("%s\t%s\t%s" % (item, weight, Weibo.objects.get(w_id=item).text))
+        found=0; tot=0; cost=.0
+        for w_id, weight in sorted_r:
+            wb = Weibo.objects.get(w_id=w_id)
+            tot += 1
+            if wb.real_category==1:
+                found += 1
+                cost += math.log(tot-found+1)
+            if verbose:
+                logging.info("%s\t%s\t%s" % (wb.real_category, weight, wb.text[:30]))
+        return cost
+
 
 
 if __name__ == '__main__':
@@ -78,4 +87,5 @@ if __name__ == '__main__':
     G = du.load_graph(load_path)
     tbr = TimeBasedRank(G, topic_words=topic_words, limit=limit)
     tbr.rank()
-    tbr.output()
+    cost = tbr.test()
+    logging.info(cost)

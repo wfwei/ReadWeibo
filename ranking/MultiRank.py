@@ -52,8 +52,6 @@ class MultiRank:
         y_wd = np.zeros((wd_id, 1))
 
         print 'wb_id:%s\twd_id:%s' % (wb_id, wd_id)
-        print 'R.shape:', R.shape
-        print 'W.shape:', W.shape
         for key, info in graph.nodes(data=True):
             if info['tp'] == 'weibo':
                 continue
@@ -117,11 +115,18 @@ class MultiRank:
             if node['tp'] == 'weibo':
                 self.ranks[key] = f[node['id']]
 
-    def output(self):
+    def test(self, verbose=False):
         sorted_r = sorted(self.ranks.iteritems(), key=operator.itemgetter(1), reverse=True)
+        found=0; tot=0; cost=.0
         for w_id, weight in sorted_r:
             wb = Weibo.objects.get(w_id=w_id)
-            logging.info("%s\t%s\t%s" % (wb.real_category, weight, wb.text[:30]))
+            tot += 1
+            if wb.real_category==1:
+                found += 1
+                cost += math.log(tot-found+1)
+            if verbose:
+                logging.info("%s\t%s\t%s" % (wb.real_category, weight, wb.text[:30]))
+        return cost
 
 
 if __name__ == '__main__':
@@ -148,7 +153,11 @@ if __name__ == '__main__':
         _id += 2
 
     G = du.load_graph(load_path)
-    mr = MultiRank(G, topic_words=topic_words, max_iter=max_iter)
-    mr.rank()
-    mr.output()
+
+    for mu, eta, beta in [(.1,.1,.8), (.1,.3,.6), (.3,.1,.6), (.2,.4,.4), (.4,.2,.4)]:
+        mr = MultiRank(G, topic_words=topic_words, max_iter=max_iter,
+                    alpha=.0, beta=beta, mu=mu, eta=eta)
+        mr.rank()
+        cost = mr.test(verbose=False)
+        logging.info("cost=%s \t mu=%s, eta=%s, beta=%s" % (cost, mu, eta, beta))
 
