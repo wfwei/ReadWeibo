@@ -21,7 +21,7 @@ class TopicalWordRank:
         self.ranks = dict()
         self.p = dict()
 
-    def gibbs_lda(self, fdir, ntopics=25, niters=1000, savestep=500, twords=20):
+    def gibbs_lda(self, fdir, ntopics=75, niters=1000, savestep=500, twords=20):
         self.ntopics = ntopics
 
         logging.info("lda topic modeling")

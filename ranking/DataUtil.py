@@ -30,38 +30,68 @@ def gen_graph(save_path=None, start_idx=0, max_cnt=1000):
         wb_list = Weibo.objects.exclude(real_category=0).filter(retweeted_status__exact=None).order_by('-created_at')[wb_idx:wb_idx+page_size]
         wb_idx += len(wb_list)
 
+        #微博和用户，关键词的关系
         for wb in wb_list:
-
-            logging.debug(u"\nDealing with %s" % wb)
+            logging.info(u"\nDealing with %s" % wb)
             G.add_node(wb.w_id, category=wb.real_category,
                        tp=u'weibo', time=wb.created_at)
 
-            w_user =[] ; w_user.append(wb.owner)
+            new_users = []
+
+            user = wb.owner
+            if u'@'+user.w_name not in G:
+                G.add_node(u'@'+user.w_name, category=user.real_category, tp=u'user')
+                new_users.append(user)
+            G.add_edge(wb.w_id, u'@'+user.w_name, weight=1.0) #original
+
             w_text = wb.text
 
             for retweet in wb.retweet_status.all():
                 w_text += retweet.text
-                w_user.append(retweet.owner)
+                _name = u'@'+retweet.owner.w_name
+                if _name not in G:
+                    G.add_node(_name, category=user.real_category, tp=u'user')
+                    new_users.append(retweet.owner)
+                G.add_edge(wb.w_id, _name, weight=0.9) #retweet
 
             for comment in wb.comments.all():
                 w_text += comment.text
-                w_user.append(comment.owner)
+                _name = u'@'+comment.owner.w_name
+                if _name not in G:
+                    G.add_node(_name, category=user.real_category, tp=u'user')
+                    new_users.append(comment.owner)
+                G.add_edge(wb.w_id, _name, weight=0.9) #comment
 
-            for user in w_user:
-                if not user:
-                    continue
-                G.add_node(user.w_uid, category=user.real_category, tp=u'user')
-                G.add_edge(wb.w_id, user.w_uid, weight=1.0)
-                logging.debug('Add <%s, %s>' % (wb, user))
-            w_text = re.sub("@[^\s@:]+", "", w_text)
+            for _name in re.findall("@[^\s:@]+", w_text):
+                if _name not in G:
+                    G.add_node(_name, category=user.real_category, tp=u'user')
+                G.add_edge(wb.w_id, _name, weight=0.9) #mention@
+
+            w_text = re.sub("@[^\s:@]+", "", w_text)
             W_text = re.sub(u"\[[^ ]{1,3}\]", u"", w_text)
             w_text = re.sub(u"http://t.cn[^ ]*", u"", w_text)
             for w in pseg.cut(w_text.lower()):
-                if len(w.word)<2 or w.word in Config.STOP_WORDS or u'n' not in w.flag:
+                if len(w.word)<2 or w.word in Config.STOP_WORDS:
                     continue
-                G.add_node((w.word), tp=u'word')
-                G.add_edge((w.word), wb.w_id, weight=1.0)
-                logging.debug(u'Add <%s, %s>' % (wb, w.word))
+                if u'n' not in w.flag and u'v' not in w.flag:
+                    continue
+                if w.word not in G:
+                    G.add_node(w.word, tp=u'word')
+                G.add_edge(w.word, wb.w_id, weight=1.0) #contain words
+
+        #用户和关键词的关系
+        for user in new_users:
+            if not user.w_description:
+                continue
+
+            for w in pseg.cut(user.w_description.lower()):
+                if len(w.word)<2 or w.word in Config.STOP_WORDS:
+                    continue
+                if u'n' not in w.flag and u'v' not in w.flag:
+                    continue
+                if w.word not in G:
+                    G.add_node(w.word, tp=u'word')
+                G.add_edge(w.word, u'@'+user.w_name, weight=1.0) #contain words
 
     dist = {}
     for key, node in G.nodes(data=True):
@@ -70,6 +100,9 @@ def gen_graph(save_path=None, start_idx=0, max_cnt=1000):
             G.graph[tp] += 1
         else:
             G.graph[tp] = 1
+
+    G.graph['dist'] = dist
+    logging.info(dist)
 
     if save_path:
         nx.write_yaml(G, save_path, encoding='UTF-8')
@@ -84,10 +117,14 @@ def load_graph(load_path, encoding='UTF-8'):
     for key, node in G.nodes(data=True):
         tp = node['tp']
         if tp in dist:
-            dist[tp] += 1
+            G.graph[tp] += 1
         else:
-            dist[tp] = 1
+            G.graph[tp] = 1
+
+    G.graph['dist'] = dist
     logging.info(dist)
+
+
     return G
 
 if __name__ == '__main__':
