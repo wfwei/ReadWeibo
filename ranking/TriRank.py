@@ -16,6 +16,10 @@ import operator
 import math, random, sys, csv
 
 
+import jieba
+import jieba.posseg as pseg
+jieba.load_userdict(u"/etc/jieba/jieba.dic")
+
 class TriRank:
 
     def __init__(self, graph, K, alpha=1.0, beta=1.0, gamma=1.0):
@@ -48,6 +52,8 @@ class TriRank:
         R_ut = lil_matrix((u_id, wd_id))
         R_ud = lil_matrix((u_id, wb_id))
         R_td = lil_matrix((wd_id, wb_id))
+
+        G = self.graph
 
         for nod1, nod2, info in G.edges_iter(data=True):
             info1 = G.node[nod1]
@@ -128,7 +134,8 @@ class TriRank:
         print 'D.shape:', D.shape
 
         #TODO how to find smallest non-zero eigen vaues
-        eigen_value, eigen_vec_r = linalg.eigs(L, k=min(self.K, L.shape[0]), M=D, sigma=0.05)
+        eigen_value, eigen_vec_r = linalg.eigs(L, k=min(self.K, L.shape[0]), M=D, sigma=0.1)
+        #eigen_value, eigen_vec_r = linalg.eigs(L, k=min(self.K, L.shape[0]), M=D)
 
         print 'eigen_value.shape', eigen_value.shape
         print 'eigen_vec_r.shape', eigen_vec_r.shape
@@ -146,25 +153,36 @@ class TriRank:
                 offset = u_cnt + t_cnt
             self.coor[node] = h[offset + info['id']]
 
-    def test(self, query, topk=15, verbose=False):
+    def test(self, query, topk=100, verbose=False):
 
-        if query not in self.coor:
-            logging.warn(u"query not found")
-            return
+        queries = []
+        for w in pseg.cut(query.lower()):
+            if w.word in self.coor:
+                print 'query: ', w.word
+                queries.append(self.coor[w.word])
+            else:
+                print 'filtered:', w.word
+
 
         result = [(None, sys.float_info.min)]*topk
-        coor = self.coor
-        target = coor[query]
 
-        for item in coor:
-            heapq.heappushpop(result, (1.0/(1+np.linalg.norm(coor[item]-target)), item))
+        for item in self.coor:
+            dist = 0
+            for target in queries:
+                dist += 1.0/(1+np.linalg.norm(self.coor[item]-target))
+            heapq.heappushpop(result, (dist, item))
 
         logging.info(u"Query:%s" % query)
         sorted_r =  [heapq.heappop(result) for i in range(min(len(result), topk))]
+        wbs = []
         for weight, item in sorted_r:
             logging.info(u"weight:%s\titem:%s" % (weight, item))
+            if type(item) == long:
+                wb = Weibo.objects.get(w_id=item)
+                wbs.append(wb)
+                print wb.owner, wb.text[:35]
 
-        return result
+        return wbs
 
 if __name__ == '__main__':
     if len(sys.argv)<2:
@@ -180,7 +198,7 @@ if __name__ == '__main__':
 
     #G = du.gen_graph(load_path, start_idx=1000, max_cnt=500)
     G = du.load_graph(load_path)
-    tr = TriRank(G, 19)
+    tr = TriRank(G, 9)
     tr.build_model()
-    tr.test(query, topk=20)
+    tr.test(query, topk=200)
 

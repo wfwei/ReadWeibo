@@ -4,7 +4,7 @@
 from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpResponseRedirect
-from ipware.ip import get_ip_address_from_request
+#from ipware.ip import get_ip_address_from_request
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -15,6 +15,9 @@ from ReadWeibo.mainapp.models import Weibo, Category
 from ReadWeibo.account.models import Account
 from libweibo import weibo
 from main import Config
+from ranking.TriRank import TriRank
+from ranking.ManifoldRank import ManifoldRank
+from ranking import DataUtil as du
 
 from time import sleep
 import itertools
@@ -33,6 +36,23 @@ wclient = weibo.APIClient(app_key = Config.WEIBO_API['app_key'],
 
 all_categories = Category.objects.exclude(category_id=0)
 #default_user = Account.objects.get(w_name='WeBless')
+
+G = du.load_graph('/home/plex/wksp/projects/ReadWeibo/ranking/data/graph500.yaml')
+#ranker = TriRank(G, 133)
+#ranker.build_model()
+
+def search(request, query):
+    mr = ManifoldRank(G, topic_words=query)
+    mr.rank()
+    weibo_list = mr.test(verbose=True)
+    #weibo_list = ranker.test(query)
+    template_var = {}
+    template_var['weibo_list'] = weibo_list
+    template_var['all_categories'] = all_categories
+    template_var['authorize_url'] = wclient.get_authorize_url()
+
+    return render_to_response("weibos.html", template_var,
+                              context_instance=RequestContext(request))
 
 def home(request, category_id=1):
     return show_weibo_for_labeling(request)
@@ -79,9 +99,9 @@ def show_weibos(request, original=True, category_id=0, show_predict=False):
         logging.warn('No category found')
         return HttpResponse('No category found for id:%s' % category_id)
 
-    ip = get_ip_address_from_request(request)
+    #ip = get_ip_address_from_request(request)
 
-    logging.info('current login user: %s, show %s, ip:%s' % (request.user, category, ip))
+    #logging.info('current login user: %s, show %s, ip:%s' % (request.user, category, ip))
 
     template_var = {}
     if show_predict:

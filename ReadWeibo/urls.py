@@ -33,4 +33,8 @@ urlpatterns = patterns('',
     # Admin
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
+
+
+    #Search
+    url(r'^search/(?P<query>.+)$', 'ReadWeibo.mainapp.views.search', name='search_weibo'),
 )
